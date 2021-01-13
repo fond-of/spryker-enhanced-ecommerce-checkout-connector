@@ -17,4 +17,6 @@ interface EnhancedEcommerceCheckoutConnectorConstants
     public const PARAM_PRODUCT_ATTR_SIZE_UNTRANSLATED = 'size_untranslated';
     public const PARAM_PRODUCT_ATTR_SIZE = 'size';
     public const PARAM_PRODUCT_ATTR_BRAND = 'brand';
+
+    public const STEP_PAYMENT_ADDRESS = '1';
 }

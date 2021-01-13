@@ -50,8 +50,8 @@ class PaymentAddressExpander implements EnhancedEcommerceDataLayerExpanderInterf
             ->setEvent(ModuleConstants::EVENT_NAME)
             ->setEventCategory(ModuleConstants::EVENT_CATEGORY)
             ->setEventAction(ModuleConstants::EVENT_ACTION)
-            ->setEventLabel(1)
-            ->setEcommerce(['checkout' => $this->createEnhancedEcommerceCheckoutTransfer()]);
+            ->setEventLabel(ModuleConstants::STEP_PAYMENT_ADDRESS)
+            ->setEcommerce([ModuleConstants::EVENT_ACTION => $this->createEnhancedEcommerceCheckoutTransfer()]);
 
         return $enhancedEcommerceTransfer->toArray();
     }
