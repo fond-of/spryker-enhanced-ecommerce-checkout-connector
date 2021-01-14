@@ -1,0 +1,11 @@
+jQuery(document).ready(function (e) {
+    jQuery('#paymentForm_paymentSelection').on('change', function ()  {
+        eecLayer = {{ data|json_encode()|raw }};
+        availablePaymentProvider = {{ paymentProvider|json_encode|raw }}
+        payment = availablePaymentProvider[jQuery(this).val()];
+
+        eecLayer['ec_checkout_option']['checkout_option']['action_field']['option'] = payment;
+
+        window.dataLayer.push(eecLayer);
+    });
+});

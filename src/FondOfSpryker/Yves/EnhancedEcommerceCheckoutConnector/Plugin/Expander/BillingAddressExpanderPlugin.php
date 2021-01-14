@@ -9,7 +9,7 @@ use Spryker\Yves\Kernel\AbstractPlugin;
 /**
  * @method \FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\EnhancedEcommerceCheckoutConnectorFactory getFactory()
  */
-class PaymentAddressExpanderPlugin extends AbstractPlugin implements EnhancedEcommerceDataLayerExpanderPluginInterface
+class BillingAddressExpanderPlugin extends AbstractPlugin implements EnhancedEcommerceDataLayerExpanderPluginInterface
 {
     /**
      * @param string $pageType
@@ -19,7 +19,7 @@ class PaymentAddressExpanderPlugin extends AbstractPlugin implements EnhancedEco
      */
     public function isApplicable(string $pageType, array $twigVariableBag = []): bool
     {
-        return $pageType === EnhancedEcommerceCheckoutConnectorConstants::PAGE_TYPE;
+        return $pageType === EnhancedEcommerceCheckoutConnectorConstants::PAGE_TYPE_BILLING_ADDRESS;
     }
 
     /**
@@ -32,7 +32,7 @@ class PaymentAddressExpanderPlugin extends AbstractPlugin implements EnhancedEco
     public function expand(string $page, array $twigVariableBag, array $dataLayer): array
     {
         return $this->getFactory()
-            ->createPaymentAddressExpander()
+            ->createBillingAddressExpander()
             ->expand($page, $twigVariableBag, $dataLayer);
     }
 }
