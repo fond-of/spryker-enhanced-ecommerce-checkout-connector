@@ -4,8 +4,9 @@ namespace FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\Expander;
 
 use Codeception\Test\Unit;
 use FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\Dependency\EnhancedEcommerceCheckoutConnectorToCartClientInterface;
+use FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\Model\ProductModelInterface;
+use Generated\Shared\Transfer\ItemTransfer;
 use Generated\Shared\Transfer\QuoteTransfer;
-use Spryker\Shared\Money\Dependency\Plugin\MoneyPluginInterface;
 
 class PaymentAddressExpanderTest extends Unit
 {
@@ -15,9 +16,9 @@ class PaymentAddressExpanderTest extends Unit
     protected $cartClientMock;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|\Spryker\Shared\Money\Dependency\Plugin\MoneyPluginInterface
+     * @var \PHPUnit\Framework\MockObject\MockObject|ProductModelInterface
      */
-    protected $moneyPluginMock;
+    protected $productModelMock;
 
     /**
      * @var \FondOfSpryker\Yves\EnhancedEcommerceExtension\Dependency\EnhancedEcommerceDataLayerExpanderInterface
@@ -30,6 +31,11 @@ class PaymentAddressExpanderTest extends Unit
     protected $quoteTransferMock;
 
     /**
+     * @var \PHPUnit\Framework\MockObject\MockObject|ItemTransfer
+     */
+    protected $itemTransferMock;
+
+    /**
      * @return void
      */
     protected function _before(): void
@@ -38,7 +44,7 @@ class PaymentAddressExpanderTest extends Unit
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->moneyPluginMock = $this->getMockBuilder(MoneyPluginInterface::class)
+        $this->productModelMock = $this->getMockBuilder(ProductModelInterface::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -46,7 +52,11 @@ class PaymentAddressExpanderTest extends Unit
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->expander = new PaymentAddressExpander($this->cartClientMock, $this->moneyPluginMock);
+        $this->itemTransferMock = $this->getMockBuilder(ItemTransfer::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $this->expander = new PaymentAddressExpander($this->cartClientMock, $this->productModelMock);
     }
 
     /**
@@ -60,8 +70,17 @@ class PaymentAddressExpanderTest extends Unit
 
         $this->quoteTransferMock->expects($this->atLeastOnce())
             ->method('getItems')
-            ->willReturn([]);
+            ->willReturn([$this->itemTransferMock, $this->itemTransferMock, $this->itemTransferMock]);
 
-        $this->expander->expand('pageType', [], []);
+        $result = $this->expander->expand('pageType', [], []);
+
+        $this->assertArrayHasKey('event', $result);
+        $this->assertArrayHasKey('event_category', $result);
+        $this->assertArrayHasKey('event_action', $result);
+        $this->assertArrayHasKey('event_label', $result);
+        $this->assertArrayHasKey('ecommerce', $result);
+        $this->assertArrayHasKey('checkout', $result['ecommerce']);
+        $this->assertArrayHasKey('action_field', $result['ecommerce']['checkout']);
+        $this->assertArrayHasKey('step', $result['ecommerce']['checkout']['action_field']);
     }
 }
