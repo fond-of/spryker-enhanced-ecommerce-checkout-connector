@@ -22,7 +22,6 @@
         <property name="variant" type="string"/>
         <property name="brand" type="string"/>
         <property name="dimension10" type="string"/>
-        <property name="float" type="string"/>
         <property name="price" type="string"/>
         <property name="quantity" type="int"/>
     </transfer>
@@ -35,7 +34,6 @@
         <property name="name" type="string"/>
         <property name="sku" type="string"/>
         <property name="quantity" type="int"/>
-
         <property name="sumPrice" type="int"/>
         <property name="abstractAttributes" type="array" singular="abstractAttribute"/>
     </transfer>

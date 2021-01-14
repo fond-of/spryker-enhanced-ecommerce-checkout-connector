@@ -25,6 +25,8 @@ class PaymentAddressExpander implements EnhancedEcommerceDataLayerExpanderInterf
      */
     protected $moneyPlugin;
 
+    protected $productAttributes;
+
     /**
      * @param \FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\Dependency\EnhancedEcommerceCheckoutConnectorToCartClientInterface $cartClient
      * @param \Spryker\Shared\Money\Dependency\Plugin\MoneyPluginInterface $moneyPlugin
@@ -61,8 +63,9 @@ class PaymentAddressExpander implements EnhancedEcommerceDataLayerExpanderInterf
      */
     protected function createEnhancedEcommerceCheckoutTransfer(): array
     {
-        $enhancedEcommerceCheckoutTransfer = new EnhancedEcommerceCheckoutTransfer();
-        $enhancedEcommerceCheckoutTransfer->setActionField(['step' => 1]);
+        $enhancedEcommerceCheckoutTransfer = (new EnhancedEcommerceCheckoutTransfer())
+            ->setActionField(['step' => 1]);
+
         $enhancedEcommerceCheckoutTransfer = $this->addProductsFromQuote($enhancedEcommerceCheckoutTransfer);
 
         return $this->removeEmptyArrayIndex($enhancedEcommerceCheckoutTransfer->toArray());
@@ -77,6 +80,10 @@ class PaymentAddressExpander implements EnhancedEcommerceDataLayerExpanderInterf
         EnhancedEcommerceCheckoutTransfer $enhancedEcommerceCheckoutTransfer
     ): EnhancedEcommerceCheckoutTransfer {
         foreach ($this->cartClient->getQuote()->getItems() as $itemTransfer) {
+            if (!$itemTransfer->getAbstractAttributes() || count($itemTransfer->getAbstractAttributes()) === 0) {
+                continue;
+            }
+
             $enhancedEcommerceProductTranfer = (new EnhancedEcommerceProductTransfer())
                 ->setId($itemTransfer->getSku())
                 ->setName($this->getProductName($itemTransfer))
@@ -101,10 +108,6 @@ class PaymentAddressExpander implements EnhancedEcommerceDataLayerExpanderInterf
     {
         $productAttributes = $itemTransfer->getAbstractAttributes();
 
-        if (!$productAttributes || count($productAttributes) === 0) {
-            return '';
-        }
-
         if (isset($productAttributes[static::UNTRANSLATED_KEY][ModuleConstants::PARAM_PRODUCT_ATTR_MODEL_UNTRANSLATED])) {
             return $productAttributes[static::UNTRANSLATED_KEY][ModuleConstants::PARAM_PRODUCT_ATTR_MODEL_UNTRANSLATED];
         }
@@ -124,10 +127,6 @@ class PaymentAddressExpander implements EnhancedEcommerceDataLayerExpanderInterf
     protected function getProductAttrStyle(ItemTransfer $itemTransfer): string
     {
         $productAttributes = $itemTransfer->getAbstractAttributes();
-
-        if (!$productAttributes || count($productAttributes) === 0) {
-            return '';
-        }
 
         if (isset($productAttributes[static::UNTRANSLATED_KEY][ModuleConstants::PARAM_PRODUCT_ATTR_STYLE_UNTRANSLATED])) {
             return $productAttributes[static::UNTRANSLATED_KEY][ModuleConstants::PARAM_PRODUCT_ATTR_STYLE_UNTRANSLATED];
@@ -149,10 +148,6 @@ class PaymentAddressExpander implements EnhancedEcommerceDataLayerExpanderInterf
     {
         $productAttributes = $itemTransfer->getAbstractAttributes();
 
-        if (!$productAttributes || count($productAttributes) === 0) {
-            return '';
-        }
-
         if (isset($productAttributes[static::UNTRANSLATED_KEY][ModuleConstants::PARAM_PRODUCT_ATTR_BRAND])) {
             return $productAttributes[static::UNTRANSLATED_KEY][ModuleConstants::PARAM_PRODUCT_ATTR_BRAND];
         }
@@ -168,10 +163,6 @@ class PaymentAddressExpander implements EnhancedEcommerceDataLayerExpanderInterf
     protected function getSize(ItemTransfer $itemTransfer): string
     {
         $productAttributes = $itemTransfer->getAbstractAttributes();
-
-        if (!$productAttributes || count($productAttributes) === 0) {
-            return '';
-        }
 
         if (isset($productAttributes[static::UNTRANSLATED_KEY][ModuleConstants::PARAM_PRODUCT_ATTR_SIZE_UNTRANSLATED])) {
             return $productAttributes[static::UNTRANSLATED_KEY][ModuleConstants::PARAM_PRODUCT_ATTR_SIZE_UNTRANSLATED];
