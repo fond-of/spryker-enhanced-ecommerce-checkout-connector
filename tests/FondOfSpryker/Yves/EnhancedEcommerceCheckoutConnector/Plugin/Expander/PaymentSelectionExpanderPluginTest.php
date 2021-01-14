@@ -1,8 +1,6 @@
 <?php
 
-
 namespace FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\Plugin\Expander;
-
 
 use Codeception\Test\Unit;
 use FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\EnhancedEcommerceCheckoutConnectorFactory;
