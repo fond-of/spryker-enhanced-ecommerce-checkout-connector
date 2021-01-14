@@ -6,7 +6,7 @@ use Codeception\Test\Unit;
 use FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\EnhancedEcommerceCheckoutConnectorFactory;
 use FondOfSpryker\Yves\EnhancedEcommerceExtension\Dependency\EnhancedEcommerceDataLayerExpanderInterface;
 
-class PaymentAddressExpanderPluginTest extends Unit
+class BillingAddressExpanderPluginTest extends Unit
 {
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject|\FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\EnhancedEcommerceCheckoutConnectorFactory
@@ -36,7 +36,7 @@ class PaymentAddressExpanderPluginTest extends Unit
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->plugin = new PaymentAddressExpanderPlugin();
+        $this->plugin = new BillingAddressExpanderPlugin();
         $this->plugin->setFactory($this->factoryMock);
     }
 
@@ -46,7 +46,7 @@ class PaymentAddressExpanderPluginTest extends Unit
     public function testExpand(): void
     {
         $this->factoryMock->expects($this->atLeastOnce())
-            ->method('createPaymentAddressExpander')
+            ->method('createBillingAddressExpander')
             ->willReturn($this->expanderMock);
 
         $this->expanderMock->expects($this->atLeastOnce())

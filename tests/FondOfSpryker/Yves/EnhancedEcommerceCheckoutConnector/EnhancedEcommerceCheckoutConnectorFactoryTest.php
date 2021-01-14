@@ -3,6 +3,7 @@
 namespace FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector;
 
 use Codeception\Test\Unit;
+use FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\Converter\IntegerToDecimalConverterInterface;
 use FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\Dependency\EnhancedEcommerceCheckoutConnectorToCartClientInterface;
 use FondOfSpryker\Yves\EnhancedEcommerceExtension\Dependency\EnhancedEcommerceDataLayerExpanderInterface;
 use Spryker\Shared\Money\Dependency\Plugin\MoneyPluginInterface;
@@ -21,9 +22,9 @@ class EnhancedEcommerceCheckoutConnectorFactoryTest extends Unit
     protected $cartClientMock;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|\Spryker\Shared\Money\Dependency\Plugin\MoneyPluginInterface
+     * @var \PHPUnit\Framework\MockObject\MockObject|IntegerToDecimalConverterInterface
      */
-    protected $moneyPluginMock;
+    protected $integerToDecimalConverter;
 
     /**
      * @var \FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\EnhancedEcommerceCheckoutConnectorFactory
@@ -43,7 +44,7 @@ class EnhancedEcommerceCheckoutConnectorFactoryTest extends Unit
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->moneyPluginMock = $this->getMockBuilder(MoneyPluginInterface::class)
+        $this->integerToDecimalConverter = $this->getMockBuilder(IntegerToDecimalConverterInterface::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -73,7 +74,7 @@ class EnhancedEcommerceCheckoutConnectorFactoryTest extends Unit
     /**
      * @return void
      */
-    public function testGetMoneyPlugin(): void
+    public function testGetIntegerToDecimalConverter(): void
     {
         $this->containerMock->expects($this->atLeastOnce())
             ->method('has')
@@ -81,11 +82,11 @@ class EnhancedEcommerceCheckoutConnectorFactoryTest extends Unit
 
         $this->containerMock->expects($this->atLeastOnce())
             ->method('get')
-            ->willReturn($this->moneyPluginMock);
+            ->willReturn($this->integerToDecimalConverter);
 
         $this->assertInstanceOf(
-            MoneyPluginInterface::class,
-            $this->factory->getMoneyPlugin()
+            IntegerToDecimalConverterInterface::class,
+            $this->factory->getIntegerToDecimalConverter()
         );
     }
 
@@ -100,11 +101,11 @@ class EnhancedEcommerceCheckoutConnectorFactoryTest extends Unit
 
         $this->containerMock->expects($this->atLeastOnce())
             ->method('get')
-            ->willReturn($this->cartClientMock, $this->moneyPluginMock,);
+            ->willReturn($this->cartClientMock, $this->integerToDecimalConverter,);
 
         $this->assertInstanceOf(
             EnhancedEcommerceDataLayerExpanderInterface::class,
-            $this->factory->createPaymentAddressExpander()
+            $this->factory->createBillingAddressExpander()
         );
     }
 }

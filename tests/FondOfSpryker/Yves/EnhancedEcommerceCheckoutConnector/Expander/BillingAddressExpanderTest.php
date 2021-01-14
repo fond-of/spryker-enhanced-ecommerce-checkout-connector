@@ -8,7 +8,7 @@ use FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\Model\ProductModelInte
 use Generated\Shared\Transfer\ItemTransfer;
 use Generated\Shared\Transfer\QuoteTransfer;
 
-class PaymentAddressExpanderTest extends Unit
+class BillingAddressExpanderTest extends Unit
 {
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject|\FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\Dependency\EnhancedEcommerceCheckoutConnectorToCartClientInterface
@@ -16,7 +16,7 @@ class PaymentAddressExpanderTest extends Unit
     protected $cartClientMock;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|ProductModelInterface
+     * @var \PHPUnit\Framework\MockObject\MockObject|\FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\Model\ProductModelInterface
      */
     protected $productModelMock;
 
@@ -31,7 +31,7 @@ class PaymentAddressExpanderTest extends Unit
     protected $quoteTransferMock;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|ItemTransfer
+     * @var \PHPUnit\Framework\MockObject\MockObject|\Generated\Shared\Transfer\ItemTransfer
      */
     protected $itemTransferMock;
 
@@ -56,7 +56,7 @@ class PaymentAddressExpanderTest extends Unit
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->expander = new PaymentAddressExpander($this->cartClientMock, $this->productModelMock);
+        $this->expander = new BillingAddressExpander($this->cartClientMock, $this->productModelMock);
     }
 
     /**
