@@ -25,8 +25,6 @@ class PaymentAddressExpander implements EnhancedEcommerceDataLayerExpanderInterf
      */
     protected $moneyPlugin;
 
-    protected $productAttributes;
-
     /**
      * @param \FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\Dependency\EnhancedEcommerceCheckoutConnectorToCartClientInterface $cartClient
      * @param \Spryker\Shared\Money\Dependency\Plugin\MoneyPluginInterface $moneyPlugin
