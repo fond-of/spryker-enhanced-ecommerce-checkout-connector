@@ -18,4 +18,15 @@ class EnhancedEcommerceCheckoutConnectorConfig extends AbstractBundleConfig
             ModuleConstants::PAYMENT_METHOD_CREDITCARD_SELECTION => ModuleConstants::PAYMENT_METHOD_CREDITCARD_NAME,
         ]);
     }
+
+    /**
+     * @return array
+     */
+    public function getValidCheckoutDatalayerIndex(): array
+    {
+        return $this->get(ModuleConstants::VALID_CHECKOUT_DATALAYER_INDEX, [
+            ModuleConstants::EVENT_ACTION_PURCHASE_FIELD_COUPON,
+            ModuleConstants::EVENT_ACTION_PURCHASE_FIELD_SHIPPING,
+        ]);
+    }
 }

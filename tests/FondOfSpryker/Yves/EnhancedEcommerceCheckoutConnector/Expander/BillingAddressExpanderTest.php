@@ -4,6 +4,8 @@ namespace FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\Expander;
 
 use Codeception\Test\Unit;
 use FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\Dependency\EnhancedEcommerceCheckoutConnectorToCartClientInterface;
+use FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\EnhancedEcommerceCheckoutConnectorConfig;
+use FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\Model\ProductModel;
 use FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\Model\ProductModelInterface;
 use Generated\Shared\Transfer\ItemTransfer;
 use Generated\Shared\Transfer\QuoteTransfer;
@@ -36,6 +38,11 @@ class BillingAddressExpanderTest extends Unit
     protected $itemTransferMock;
 
     /**
+     * @var \PHPUnit\Framework\MockObject\MockObject|\FondOfSpryker\Yves\EnhancedEcommerceCartConnector\EnhancedEcommerceCartConnectorConfig
+     */
+    protected $configMock;
+
+    /**
      * @return void
      */
     protected function _before(): void
@@ -56,7 +63,19 @@ class BillingAddressExpanderTest extends Unit
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->expander = new BillingAddressExpander($this->cartClientMock, $this->productModelMock);
+        $this->productModelMock = $this->getMockBuilder(ProductModel::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $this->configMock = $this->getMockBuilder(EnhancedEcommerceCheckoutConnectorConfig::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $this->expander = new BillingAddressExpander(
+            $this->cartClientMock,
+            $this->productModelMock,
+            $this->configMock
+        );
     }
 
     /**
