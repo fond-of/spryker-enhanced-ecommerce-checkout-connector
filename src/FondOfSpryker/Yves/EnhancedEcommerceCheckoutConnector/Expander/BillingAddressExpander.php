@@ -4,6 +4,7 @@ namespace FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\Expander;
 
 use FondOfSpryker\Shared\EnhancedEcommerceCheckoutConnector\EnhancedEcommerceCheckoutConnectorConstants as ModuleConstants;
 use FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\Dependency\EnhancedEcommerceCheckoutConnectorToCartClientInterface;
+use FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\EnhancedEcommerceCheckoutConnectorConfig;
 use FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\Model\ProductModelInterface;
 use FondOfSpryker\Yves\EnhancedEcommerceExtension\Dependency\EnhancedEcommerceDataLayerExpanderInterface;
 use Generated\Shared\Transfer\EnhancedEcommerceCheckoutTransfer;
@@ -19,7 +20,12 @@ class BillingAddressExpander implements EnhancedEcommerceDataLayerExpanderInterf
     /**
      * @var \FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\Model\ProductModelInterface
      */
-    private $productModel;
+    protected $productModel;
+
+    /**
+     * @var \FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\EnhancedEcommerceCheckoutConnectorConfig
+     */
+    protected $config;
 
     /**
      * @param \FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\Dependency\EnhancedEcommerceCheckoutConnectorToCartClientInterface $cartClient
@@ -27,10 +33,12 @@ class BillingAddressExpander implements EnhancedEcommerceDataLayerExpanderInterf
      */
     public function __construct(
         EnhancedEcommerceCheckoutConnectorToCartClientInterface $cartClient,
-        ProductModelInterface $productModel
+        ProductModelInterface $productModel,
+        EnhancedEcommerceCheckoutConnectorConfig $config
     ) {
         $this->cartClient = $cartClient;
         $this->productModel = $productModel;
+        $this->config = $config;
     }
 
     /**
@@ -47,41 +55,26 @@ class BillingAddressExpander implements EnhancedEcommerceDataLayerExpanderInterf
             ->setEventCategory(ModuleConstants::EVENT_CATEGORY)
             ->setEventAction(ModuleConstants::EVENT_ACTION_CHECKOUT)
             ->setEventLabel(ModuleConstants::STEP_BILLING_ADDRESS)
-            ->setEcommerce([ModuleConstants::EVENT_ACTION_CHECKOUT => $this->createEnhancedEcommerceCheckoutTransfer()]);
+            ->setEcommerce([ModuleConstants::EVENT_ACTION_CHECKOUT => $this->createEnhancedEcommerceCheckoutTransfer($twigVariableBag)]);
 
         return $enhancedEcommerceTransfer->toArray();
     }
 
     /**
+     * @param array $twigVariableBag
+     *
      * @return array
      */
-    protected function createEnhancedEcommerceCheckoutTransfer(): array
+    protected function createEnhancedEcommerceCheckoutTransfer(array $twigVariableBag): array
     {
         $enhancedEcommerceCheckoutTransfer = (new EnhancedEcommerceCheckoutTransfer())
             ->setActionField(['step' => ModuleConstants::STEP_BILLING_ADDRESS]);
 
-        $enhancedEcommerceCheckoutTransfer = $this->addProductsFromQuote($enhancedEcommerceCheckoutTransfer);
-
-        return $this->removeEmptyArrayIndex($enhancedEcommerceCheckoutTransfer->toArray());
-    }
-
-    /**
-     * @param \Generated\Shared\Transfer\EnhancedEcommerceCheckoutTransfer $enhancedEcommerceCheckoutTransfer
-     *
-     * @return \Generated\Shared\Transfer\EnhancedEcommerceCheckoutTransfer
-     */
-    protected function addProductsFromQuote(
-        EnhancedEcommerceCheckoutTransfer $enhancedEcommerceCheckoutTransfer
-    ): EnhancedEcommerceCheckoutTransfer {
         foreach ($this->cartClient->getQuote()->getItems() as $itemTransfer) {
-            if (!$itemTransfer->getAbstractAttributes() || count($itemTransfer->getAbstractAttributes()) === 0) {
-                continue;
-            }
-
             $enhancedEcommerceCheckoutTransfer->addProduct($this->productModel->createFromItemTransfer($itemTransfer));
         }
 
-        return $enhancedEcommerceCheckoutTransfer;
+        return $this->deleteEmptyIndexesFromDatalayer($enhancedEcommerceCheckoutTransfer->toArray());
     }
 
     /**
@@ -89,14 +82,14 @@ class BillingAddressExpander implements EnhancedEcommerceDataLayerExpanderInterf
      *
      * @return array
      */
-    protected function removeEmptyArrayIndex(array $haystack): array
+    protected function deleteEmptyIndexesFromDatalayer(array $haystack): array
     {
         foreach ($haystack as $key => $value) {
             if (is_array($value)) {
-                $haystack[$key] = $this->removeEmptyArrayIndex($haystack[$key]);
+                $haystack[$key] = $this->deleteEmptyIndexesFromDatalayer($haystack[$key]);
             }
 
-            if (!$value) {
+            if (!$value && !in_array($key, $this->config->getValidCheckoutDatalayerIndex())) {
                 unset($haystack[$key]);
             }
         }
