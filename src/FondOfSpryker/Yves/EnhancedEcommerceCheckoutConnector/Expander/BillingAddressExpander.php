@@ -30,6 +30,7 @@ class BillingAddressExpander implements EnhancedEcommerceDataLayerExpanderInterf
     /**
      * @param \FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\Dependency\EnhancedEcommerceCheckoutConnectorToCartClientInterface $cartClient
      * @param \FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\Model\ProductModelInterface $productModel
+     * @param \FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\EnhancedEcommerceCheckoutConnectorConfig $config
      */
     public function __construct(
         EnhancedEcommerceCheckoutConnectorToCartClientInterface $cartClient,

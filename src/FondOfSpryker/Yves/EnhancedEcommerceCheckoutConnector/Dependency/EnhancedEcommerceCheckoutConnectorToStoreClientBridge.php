@@ -7,6 +7,9 @@ use Spryker\Client\Store\StoreClientInterface;
 
 class EnhancedEcommerceCheckoutConnectorToStoreClientBridge implements EnhancedEcommerceCheckoutConnectorToStoreClientInterface
 {
+    /**
+     * @var \Spryker\Client\Store\StoreClientInterface
+     */
     protected $storeClient;
 
     /**
