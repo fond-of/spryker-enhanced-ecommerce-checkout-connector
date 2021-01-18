@@ -2,7 +2,7 @@
 
 namespace FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\Converter;
 
-use Spryker\Shared\Money\Exception\InvalidConverterArgumentException;
+use InvalidArgumentException;
 
 class IntegerToDecimalConverter implements IntegerToDecimalConverterInterface
 {
@@ -11,14 +11,14 @@ class IntegerToDecimalConverter implements IntegerToDecimalConverterInterface
     /**
      * @param int $value
      *
-     * @throws \Spryker\Shared\Money\Exception\InvalidConverterArgumentException
+     * @throws \InvalidArgumentException
      *
      * @return float
      */
     public function convert($value): float
     {
         if (!is_int($value)) {
-            throw new InvalidConverterArgumentException(sprintf(
+            throw new InvalidArgumentException(sprintf(
                 'Only integer values allowed for conversion to float. Current type is "%s"',
                 gettype($value)
             ));
