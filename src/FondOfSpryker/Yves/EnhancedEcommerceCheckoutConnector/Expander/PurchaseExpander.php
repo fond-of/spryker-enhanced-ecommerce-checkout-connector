@@ -47,7 +47,7 @@ class PurchaseExpander extends BillingAddressExpander implements EnhancedEcommer
 
     /**
      * @param string $page
-     * @param array $twigVariableBag
+     * @param array $twigVariableBag$productModel
      * @param array $dataLayer
      *
      * @return array
@@ -75,7 +75,7 @@ class PurchaseExpander extends BillingAddressExpander implements EnhancedEcommer
     protected function createEnhancedEcommerceCheckoutTransfer(array $twigVariableBag): array
     {
         /** @var \Generated\Shared\Transfer\OrderTransfer $orderTransfer */
-        $orderTransfer = $twigVariableBag['order'];
+        $orderTransfer = $twigVariableBag[ModuleConstants::PARAM_ORDER];
 
         $enhancedEcommerceCheckoutTransfer = (new EnhancedEcommerceCheckoutTransfer())
             ->setActionField([
@@ -87,11 +87,34 @@ class PurchaseExpander extends BillingAddressExpander implements EnhancedEcommer
                 ModuleConstants::EVENT_ACTION_PURCHASE_FIELD_COUPON => implode(',', $this->getDiscountCodesFromOrder($orderTransfer)),
             ]);
 
-        foreach ($orderTransfer->getItems() as $itemTransfer) {
-            $enhancedEcommerceCheckoutTransfer->addProduct($this->productModel->createFromItemTransfer($itemTransfer));
+        foreach ($this->mergeMultipleProducts($orderTransfer) as $itemTransfer) {
+            $enhancedEcommerceCheckoutTransfer->addProduct(
+                $this->productModel->createFromItemTransfer($itemTransfer)
+            );
         }
 
         return $this->deleteEmptyIndexesFromDatalayer($enhancedEcommerceCheckoutTransfer->toArray());
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\OrderTransfer $orderTransfer
+     *
+     * @return \Generated\Shared\Transfer\ItemTransfer[]
+     */
+    protected function mergeMultipleProducts(OrderTransfer $orderTransfer): array
+    {
+        /** @var \Generated\Shared\Transfer\ItemTransfer[] $products */
+        $products = [];
+
+        foreach ($orderTransfer->getItems() as $itemTransfer) {
+            if (array_key_exists($itemTransfer->getSku(), $products)) {
+                continue;
+            }
+
+            $products[$itemTransfer->getSku()] = $itemTransfer;
+        }
+
+        return $products;
     }
 
     /**
