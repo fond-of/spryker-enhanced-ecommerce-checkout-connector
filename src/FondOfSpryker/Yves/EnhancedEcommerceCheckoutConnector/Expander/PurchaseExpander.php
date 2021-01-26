@@ -107,7 +107,7 @@ class PurchaseExpander extends BillingAddressExpander implements EnhancedEcommer
         $products = [];
 
         foreach ($orderTransfer->getItems() as $itemTransfer) {
-            if (array_key_exists($itemTransfer->getSku(), $products)) {
+            if (isset($products[$itemTransfer->getSku()])) {
                 continue;
             }
 
