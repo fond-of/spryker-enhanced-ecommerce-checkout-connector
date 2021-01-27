@@ -25,7 +25,7 @@ class PaymentSelectionExpander implements EnhancedEcommerceDataLayerExpanderInte
             ->setEventLabel(ModuleConstants::STEP_PAYMENT_SELECTION)
             ->setEcommerce([ModuleConstants::EVENT_ACTION_CHECKOUT => $this->createEnhancedEcommerceCheckoutTransfer()]);
 
-        return $enhancedEcommerceTransfer->toArray();
+        return $enhancedEcommerceTransfer->toArray(true, true);
     }
 
     /**
@@ -36,7 +36,7 @@ class PaymentSelectionExpander implements EnhancedEcommerceDataLayerExpanderInte
         $enhancedEcommerceCheckoutTransfer = (new EnhancedEcommerceCheckoutTransfer())
             ->setActionField(['step' => ModuleConstants::STEP_PAYMENT_SELECTION]);
 
-        return $this->removeEmptyArrayIndex($enhancedEcommerceCheckoutTransfer->toArray());
+        return $this->removeEmptyArrayIndex($enhancedEcommerceCheckoutTransfer->toArray(true, true));
     }
 
     /**

@@ -25,7 +25,7 @@ class SummaryExpander implements EnhancedEcommerceDataLayerExpanderInterface
             ->setEventLabel(ModuleConstants::STEP_SUMMARY)
             ->setEcommerce([ModuleConstants::EVENT_ACTION_CHECKOUT => $this->createEnhancedEcommerceCheckoutTransfer()]);
 
-        return $enhancedEcommerceTransfer->toArray();
+        return $enhancedEcommerceTransfer->toArray(true, true);
     }
 
     /**
@@ -36,7 +36,7 @@ class SummaryExpander implements EnhancedEcommerceDataLayerExpanderInterface
         $enhancedEcommerceCheckoutTransfer = (new EnhancedEcommerceCheckoutTransfer())
             ->setActionField(['step' => ModuleConstants::STEP_SUMMARY]);
 
-        return $this->removeEmptyArrayIndex($enhancedEcommerceCheckoutTransfer->toArray());
+        return $this->removeEmptyArrayIndex($enhancedEcommerceCheckoutTransfer->toArray(true, true));
     }
 
     /**

@@ -64,7 +64,7 @@ class PurchaseExpander extends BillingAddressExpander implements EnhancedEcommer
                 ModuleConstants::PAGE_TYPE_PURCHASE => $this->createEnhancedEcommerceCheckoutTransfer($twigVariableBag),
             ]);
 
-        return $enhancedEcommerceTransfer->toArray();
+        return $enhancedEcommerceTransfer->toArray(true, true);
     }
 
     /**
@@ -93,7 +93,7 @@ class PurchaseExpander extends BillingAddressExpander implements EnhancedEcommer
             );
         }
 
-        return $this->deleteEmptyIndexesFromDatalayer($enhancedEcommerceCheckoutTransfer->toArray());
+        return $this->deleteEmptyIndexesFromDatalayer($enhancedEcommerceCheckoutTransfer->toArray(true, true));
     }
 
     /**

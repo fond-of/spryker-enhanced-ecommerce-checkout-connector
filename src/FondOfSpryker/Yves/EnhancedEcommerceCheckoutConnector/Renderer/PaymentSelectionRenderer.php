@@ -53,7 +53,9 @@ class PaymentSelectionRenderer implements EnhancedEcommerceRendererInterface
     public function expand(Environment $twig, string $page, array $twigVariableBag): string
     {
         return $twig->render($this->getTemplate(), [
-            'data' => $this->removeEmptyArrayIndex($this->createEnhancedEcommerceTransfer($twigVariableBag)->toArray()),
+            'data' => $this->removeEmptyArrayIndex(
+                $this->createEnhancedEcommerceTransfer($twigVariableBag)->toArray(true, true)
+            ),
             'paymentProvider' => $this->config->getPaymentMethodMapping(),
         ]);
     }
@@ -78,7 +80,7 @@ class PaymentSelectionRenderer implements EnhancedEcommerceRendererInterface
             ->setEventCategory(ModuleConstants::EVENT_CATEGORY)
             ->setEventAction(ModuleConstants::EVENT_ACTION_CHECKOUT_OPTION)
             ->setEventLabel(ModuleConstants::STEP_PAYMENT_SELECTION)
-            ->setEcCheckoutOption(['checkout_option' => $this->createEnhancedEcommerceCheckoutTransfer()->toArray()]);
+            ->setEcCheckoutOption(['checkout_option' => $this->createEnhancedEcommerceCheckoutTransfer()->toArray(true, true)]);
     }
 
     /**

@@ -58,7 +58,7 @@ class BillingAddressExpander implements EnhancedEcommerceDataLayerExpanderInterf
             ->setEventLabel(ModuleConstants::STEP_BILLING_ADDRESS)
             ->setEcommerce([ModuleConstants::EVENT_ACTION_CHECKOUT => $this->createEnhancedEcommerceCheckoutTransfer($twigVariableBag)]);
 
-        return $enhancedEcommerceTransfer->toArray();
+        return $enhancedEcommerceTransfer->toArray(true, true);
     }
 
     /**
@@ -75,7 +75,7 @@ class BillingAddressExpander implements EnhancedEcommerceDataLayerExpanderInterf
             $enhancedEcommerceCheckoutTransfer->addProduct($this->productModel->createFromItemTransfer($itemTransfer));
         }
 
-        return $this->deleteEmptyIndexesFromDatalayer($enhancedEcommerceCheckoutTransfer->toArray());
+        return $this->deleteEmptyIndexesFromDatalayer($enhancedEcommerceCheckoutTransfer->toArray(true, true));
     }
 
     /**
