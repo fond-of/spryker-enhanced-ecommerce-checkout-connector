@@ -82,9 +82,12 @@ class ProductModel implements ProductModelInterface
                 $this->localeClient->getCurrentLocale()
             );
 
-            $itemTransfer->setAbstractAttributes([
-                $this->localeClient->getCurrentLocale() => $productData[ModuleConstants::PARAM_PRODUCT_ATTRIBUTES],
-            ]);
+            if (isset($productData[ModuleConstants::PARAM_PRODUCT_ATTRIBUTES])) {
+                $itemTransfer->setAbstractAttributes([
+                    $this->localeClient->getCurrentLocale() => $productData[ModuleConstants::PARAM_PRODUCT_ATTRIBUTES],
+                ]);
+            }
+
         }
 
         return $itemTransfer;

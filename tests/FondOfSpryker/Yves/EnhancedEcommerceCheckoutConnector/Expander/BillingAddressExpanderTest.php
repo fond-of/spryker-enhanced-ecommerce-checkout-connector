@@ -94,12 +94,12 @@ class BillingAddressExpanderTest extends Unit
         $result = $this->expander->expand('pageType', [], []);
 
         $this->assertArrayHasKey('event', $result);
-        $this->assertArrayHasKey('event_category', $result);
-        $this->assertArrayHasKey('event_action', $result);
-        $this->assertArrayHasKey('event_label', $result);
+        $this->assertArrayHasKey('eventCategory', $result);
+        $this->assertArrayHasKey('eventAction', $result);
+        $this->assertArrayHasKey('eventLabel', $result);
         $this->assertArrayHasKey('ecommerce', $result);
         $this->assertArrayHasKey('checkout', $result['ecommerce']);
-        $this->assertArrayHasKey('action_field', $result['ecommerce']['checkout']);
-        $this->assertArrayHasKey('step', $result['ecommerce']['checkout']['action_field']);
+        $this->assertArrayHasKey('actionField', $result['ecommerce']['checkout']);
+        $this->assertArrayHasKey('step', $result['ecommerce']['checkout']['actionField']);
     }
 }
