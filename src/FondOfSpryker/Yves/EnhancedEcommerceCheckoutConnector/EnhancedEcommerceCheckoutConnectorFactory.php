@@ -102,7 +102,7 @@ class EnhancedEcommerceCheckoutConnectorFactory extends AbstractFactory
     }
 
     /**
-     * @return \FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\Dependency\EnhancedEcommerceCheckoutConnectorToCartClientInterface
+     * @return \FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\Dependency\EnhancedEcommerceCheckoutConnectorToStoreClientInterface
      */
     public function getStoreClient(): EnhancedEcommerceCheckoutConnectorToStoreClientInterface
     {

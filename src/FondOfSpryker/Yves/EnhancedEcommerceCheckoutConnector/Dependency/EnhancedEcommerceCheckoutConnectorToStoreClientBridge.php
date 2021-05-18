@@ -13,7 +13,7 @@ class EnhancedEcommerceCheckoutConnectorToStoreClientBridge implements EnhancedE
     protected $storeClient;
 
     /**
-     * @param \Spryker\Shared\Kernel\Store $store
+     * @param \Spryker\Client\Store\StoreClientInterface $storeClient
      */
     public function __construct(StoreClientInterface $storeClient)
     {

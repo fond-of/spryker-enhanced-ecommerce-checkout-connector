@@ -80,7 +80,7 @@ class PaymentSelectionRenderer implements EnhancedEcommerceRendererInterface
             ->setEventCategory(ModuleConstants::EVENT_CATEGORY)
             ->setEventAction(ModuleConstants::EVENT_ACTION_CHECKOUT_OPTION)
             ->setEventLabel(ModuleConstants::STEP_PAYMENT_SELECTION)
-            ->setEcCheckoutOption(['checkout_option' => $this->createEnhancedEcommerceCheckoutTransfer()->toArray(true, true)]);
+            ->setEcommerce(['checkout_option' => $this->createEnhancedEcommerceCheckoutTransfer()->toArray(true, true)]);
     }
 
     /**

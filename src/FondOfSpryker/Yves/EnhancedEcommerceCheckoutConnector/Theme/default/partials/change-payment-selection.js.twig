@@ -4,7 +4,7 @@ jQuery(document).ready(function (e) {
         availablePaymentProvider = {{ paymentProvider|json_encode|raw }}
         payment = availablePaymentProvider[jQuery(this).val()];
 
-        eecLayer['ecCheckoutOption']['checkout_option']['actionField']['option'] = payment;
+        eecLayer['ecommerce']['checkout_option']['actionField']['option'] = payment;
 
         window.dataLayer.push(eecLayer);
     });

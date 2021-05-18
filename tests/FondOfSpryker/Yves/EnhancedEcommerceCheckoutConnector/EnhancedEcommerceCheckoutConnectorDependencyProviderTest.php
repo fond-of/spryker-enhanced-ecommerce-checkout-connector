@@ -13,7 +13,7 @@ class EnhancedEcommerceCheckoutConnectorDependencyProviderTest extends Unit
     protected $containerMock;
 
     /**
-     * @var \FondOfSpryker\Yves\GoogleTagManagerQuoteConnector\GoogleTagManagerQuoteConnectorDependencyProvider
+     * @var \FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\EnhancedEcommerceCheckoutConnectorDependencyProvider
      */
     protected $dependencyProvider;
 
