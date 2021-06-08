@@ -87,7 +87,6 @@ class ProductModel implements ProductModelInterface
                     $this->localeClient->getCurrentLocale() => $productData[ModuleConstants::PARAM_PRODUCT_ATTRIBUTES],
                 ]);
             }
-
         }
 
         return $itemTransfer;
