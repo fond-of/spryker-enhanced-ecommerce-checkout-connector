@@ -24,6 +24,6 @@ class IntegerToDecimalConverter implements IntegerToDecimalConverterInterface
             ));
         }
 
-        return (float)bcdiv(strval($value), static::PRICE_PRECISION, 2);
+        return (float)bcdiv((string)$value, static::PRICE_PRECISION, 2);
     }
 }
