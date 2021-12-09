@@ -2,16 +2,13 @@
 
 namespace FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\Renderer;
 
-use FondOfSpryker\Shared\EnhancedEcommerceCheckoutConnector\EnhancedEcommerceCheckoutConnectorConstants as ModuleConstants;
 use FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\Dependency\EnhancedEcommerceCheckoutConnectorToCartClientInterface;
 use FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\EnhancedEcommerceCheckoutConnectorConfig;
 use FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\Model\ProductModelInterface;
 use FondOfSpryker\Yves\EnhancedEcommerceExtension\Dependency\EnhancedEcommerceRendererInterface;
-use Generated\Shared\Transfer\EnhancedEcommerceCheckoutTransfer;
-use Generated\Shared\Transfer\EnhancedEcommerceTransfer;
 use Twig\Environment;
 
-class PaymentSelectionRenderer implements EnhancedEcommerceRendererInterface
+class BillingAddressRenderer implements EnhancedEcommerceRendererInterface
 {
     /**
      * @var \FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\Dependency\EnhancedEcommerceCheckoutConnectorToCartClientInterface
@@ -53,10 +50,9 @@ class PaymentSelectionRenderer implements EnhancedEcommerceRendererInterface
     public function render(Environment $twig, string $page, array $twigVariableBag): string
     {
         return $twig->render($this->getTemplate(), [
-            'data' => $this->removeEmptyArrayIndex(
-                $this->createEnhancedEcommerceTransfer($twigVariableBag)->toArray(true, true)
-            ),
-            'paymentProvider' => $this->config->getPaymentMethodMapping(),
+            'enhancedEcommerce' => [
+                'products' => $this->getProducts(),
+            ],
         ]);
     }
 
@@ -65,53 +61,20 @@ class PaymentSelectionRenderer implements EnhancedEcommerceRendererInterface
      */
     public function getTemplate(): string
     {
-        return '@EnhancedEcommerceCheckoutConnector/partials/change-payment-selection.js.twig';
+        return '@EnhancedEcommerceCheckoutConnector/partials/billing-address.js.twig';
     }
 
     /**
-     * @param array $twigVariableBag
-     *
-     * @return \Generated\Shared\Transfer\EnhancedEcommerceTransfer
+     * @return \Generated\Shared\Transfer\EnhancedEcommerceProductTransfer[]
      */
-    protected function createEnhancedEcommerceTransfer(array $twigVariableBag): EnhancedEcommerceTransfer
+    protected function getProducts(): array
     {
-        return (new EnhancedEcommerceTransfer())
-            ->setEvent(ModuleConstants::EVENT_NAME)
-            ->setEventCategory(ModuleConstants::EVENT_CATEGORY)
-            ->setEventAction(ModuleConstants::EVENT_ACTION_CHECKOUT_OPTION)
-            ->setEventLabel(ModuleConstants::STEP_PAYMENT_SELECTION)
-            ->setEcommerce(['checkout_option' => $this->createEnhancedEcommerceCheckoutTransfer()->toArray(true, true)]);
-    }
+        $products = [];
 
-    /**
-     * @return \Generated\Shared\Transfer\EnhancedEcommerceCheckoutTransfer
-     */
-    protected function createEnhancedEcommerceCheckoutTransfer(): EnhancedEcommerceCheckoutTransfer
-    {
-        return (new EnhancedEcommerceCheckoutTransfer())
-            ->setActionField([
-                'step' => ModuleConstants::STEP_PAYMENT_SELECTION,
-                'option' => '',
-            ]);
-    }
-
-    /**
-     * @param array $haystack
-     *
-     * @return array
-     */
-    protected function removeEmptyArrayIndex(array $haystack): array
-    {
-        foreach ($haystack as $key => $value) {
-            if (is_array($value)) {
-                $haystack[$key] = $this->removeEmptyArrayIndex($haystack[$key]);
-            }
-
-            if (!$value) {
-                unset($haystack[$key]);
-            }
+        foreach ($this->cartClient->getQuote()->getItems() as $itemTransfer) {
+            $products[] = $this->productModel->createFromItemTransfer($itemTransfer);
         }
 
-        return $haystack;
+        return $products;
     }
 }

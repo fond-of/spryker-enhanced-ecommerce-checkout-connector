@@ -13,6 +13,7 @@ use FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\Expander\PurchaseExpan
 use FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\Expander\SummaryExpander;
 use FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\Model\ProductModel;
 use FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\Model\ProductModelInterface;
+use FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\Renderer\BillingAddressRenderer;
 use FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\Renderer\PaymentSelectionRenderer;
 use FondOfSpryker\Yves\EnhancedEcommerceExtension\Dependency\EnhancedEcommerceDataLayerExpanderInterface;
 use FondOfSpryker\Yves\EnhancedEcommerceExtension\Dependency\EnhancedEcommerceRendererInterface;
@@ -24,11 +25,11 @@ use Spryker\Yves\Kernel\AbstractFactory;
 class EnhancedEcommerceCheckoutConnectorFactory extends AbstractFactory
 {
     /**
-     * @return \FondOfSpryker\Yves\EnhancedEcommerceExtension\Dependency\EnhancedEcommerceDataLayerExpanderInterface
+     * @return \FondOfSpryker\Yves\EnhancedEcommerceExtension\Dependency\EnhancedEcommerceRendererInterface
      */
-    public function createBillingAddressExpander(): EnhancedEcommerceDataLayerExpanderInterface
+    public function createBillingAddressRenderer(): EnhancedEcommerceRendererInterface
     {
-        return new BillingAddressExpander($this->getCartClient(), $this->createProductModel(), $this->getConfig());
+        return new BillingAddressRenderer($this->getCartClient(), $this->createProductModel(), $this->getConfig());
     }
 
     /**
