@@ -35,7 +35,7 @@ class PurchaseExpanderPlugin extends AbstractPlugin implements EnhancedEcommerce
     public function expand(string $page, array $twigVariableBag, array $dataLayer): array
     {
         return $this->getFactory()
-            ->createPurchaseExpander()
+            ->createPurchaseRenderer()
             ->expand($page, $twigVariableBag, $dataLayer);
     }
 }

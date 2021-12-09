@@ -40,12 +40,13 @@ var datalayerGA4 = {
                 {% if product.coupon not empty %}coupon: '{{ product.coupon }}',{% endif %}
                 dimension10: '{{ product.dimension10 }}',
                 price: '{{ product.price }}'
-                {% if loop.last != true %},{% endif %}
-            {% endfor %}]
+            }{% if loop.last != true %},{% endif %}
+            {% endfor %}
+        ]
     }
 };
 
 window.dataLayer = window.dataLayer || [];
 window.dataLayer.push(datalayer);
-dataLayer.push({ ecommerce: null });
+window.dataLayer.push({ ecommerce: null });
 window.dataLayer.push(datalayerGA4);

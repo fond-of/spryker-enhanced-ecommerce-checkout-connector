@@ -9,11 +9,13 @@ use FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\Dependency\EnhancedEco
 use FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\EnhancedEcommerceCheckoutConnectorConfig;
 use FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\Model\ProductModelInterface;
 use FondOfSpryker\Yves\EnhancedEcommerceExtension\Dependency\EnhancedEcommerceDataLayerExpanderInterface;
+use FondOfSpryker\Yves\EnhancedEcommerceExtension\Dependency\EnhancedEcommerceRendererInterface;
 use Generated\Shared\Transfer\EnhancedEcommerceCheckoutTransfer;
 use Generated\Shared\Transfer\EnhancedEcommerceTransfer;
 use Generated\Shared\Transfer\OrderTransfer;
+use Twig\Environment;
 
-class PurchaseExpander extends BillingAddressExpander implements EnhancedEcommerceDataLayerExpanderInterface
+class PurchaseExpander implements EnhancedEcommerceRendererInterface
 {
     /**
      * @var \FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\Dependency\EnhancedEcommerceCheckoutConnectorToStoreClientInterface
@@ -46,13 +48,13 @@ class PurchaseExpander extends BillingAddressExpander implements EnhancedEcommer
     }
 
     /**
+     * @param \Twig\Environment $twig
      * @param string $page
-     * @param array $twigVariableBag$productModel
-     * @param array $dataLayer
+     * @param array $twigVariableBag
      *
-     * @return array
+     * @return string
      */
-    public function expand(string $page, array $twigVariableBag, array $dataLayer): array
+    public function render(Environment $twig, string $page, array $twigVariableBag): string
     {
         $enhancedEcommerceTransfer = (new EnhancedEcommerceTransfer())
             ->setEvent(ModuleConstants::EVENT_NAME)
@@ -64,7 +66,17 @@ class PurchaseExpander extends BillingAddressExpander implements EnhancedEcommer
                 ModuleConstants::PAGE_TYPE_PURCHASE => $this->createEnhancedEcommerceCheckoutTransfer($twigVariableBag),
             ]);
 
-        return $enhancedEcommerceTransfer->toArray(true, true);
+        return $twig->render($this->getTemplate(), [
+            'enhancedEcommerce' => $enhancedEcommerceTransfer->toArray(true, true),
+        ]);
+    }
+
+    /**
+     * @return string
+     */
+    public function getTemplate(): string
+    {
+        return '@EnhancedEcommerceCheckoutConnector/partials/purchase.js.twig';
     }
 
     /**

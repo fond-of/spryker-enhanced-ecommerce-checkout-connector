@@ -41,9 +41,9 @@ class EnhancedEcommerceCheckoutConnectorFactory extends AbstractFactory
     }
 
     /**
-     * @return \FondOfSpryker\Yves\EnhancedEcommerceExtension\Dependency\EnhancedEcommerceDataLayerExpanderInterface
+     * @return \FondOfSpryker\Yves\EnhancedEcommerceExtension\Dependency\EnhancedEcommerceRendererInterface
      */
-    public function createPurchaseExpander(): EnhancedEcommerceDataLayerExpanderInterface
+    public function createPurchaseRenderer(): EnhancedEcommerceRendererInterface
     {
         return new PurchaseExpander(
             $this->getCartClient(),
