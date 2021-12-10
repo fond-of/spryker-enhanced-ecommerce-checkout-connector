@@ -34,6 +34,6 @@ class PaymentSelectionRendererPlugin extends AbstractPlugin implements EnhancedE
     {
         return $this->getFactory()
             ->createPaymentSelectionRenderer()
-            ->expand($twig, $page, $twigVariableBag);
+            ->render($twig, $page, $twigVariableBag);
     }
 }

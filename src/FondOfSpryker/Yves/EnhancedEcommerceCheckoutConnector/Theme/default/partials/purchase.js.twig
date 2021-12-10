@@ -4,18 +4,18 @@ datalayer = {
     "eventAction": "purchase",
     "eventLabel": "1",
     "ecommerce": {
-        "currencyCode": "{{ enhancedEcommerce.currencyCode }}",
+        "currencyCode": "{{ enhancedEcommerce.ecommerce.currencyCode }}",
         "purchase": {
             "actionField": {
-                "id": "{{ enhancedEcommerce.purchase.id }}",
-                "affiliation": "{{ enhancedEcommerce.purchase.affiliation }}",
-                "revenue": {{ enhancedEcommerce.purchase.revenue }},
-                "tax": {{ enhancedEcommerce.purchase.tax }},
-                {% if enhancedEcommerce.purchase.coupon not empty %}"coupon": "enhancedEcommerce.purchase.coupon",{% endif %}
-                "shipping": {{ enhancedEcommerce.purchase.shipping }}
+                "id": "{{ enhancedEcommerce.ecommerce.purchase.actionField.id }}",
+                "affiliation": "{{ enhancedEcommerce.ecommerce.purchase.actionField.affiliation }}",
+                "revenue": {{ enhancedEcommerce.ecommerce.purchase.actionField.revenue }},
+                "tax": {{ enhancedEcommerce.ecommerce.purchase.actionField.tax }},
+                {% if enhancedEcommerce.ecommerce.purchase.actionField.coupon is not empty %}"coupon": "{{ enhancedEcommerce.ecommerce.purchase.actionField.coupon }}",{% endif %}
+                "shipping": {{ enhancedEcommerce.ecommerce.purchase.actionField.shipping }}
             },
             "products": [
-                {% for product in enhancedEcommerce.purchase.products %}
+                {% for product in enhancedEcommerce.ecommerce.purchase.products %}
                 {
                     "id": '{{ product.id }}',
                     "name": '{{ product.name }}',
@@ -23,7 +23,7 @@ datalayer = {
                     "brand": '{{ product.brand }}',
                     "dimension10": '{{ product.dimension10 }}',
                     "quantity": {{ product.quantity }},
-                    {% if product.coupon not empty %}"coupon": '{{ product.coupon }}',{% endif %}
+                    {% if product.coupon is not empty %}"coupon": '{{ product.coupon }}',{% endif %}
                     "price": '{{ product.price }}'
                 }{% if loop.last != true %},{% endif %}
                 {% endfor %}
@@ -35,22 +35,22 @@ datalayer = {
 var datalayer4GA = {
     "event": "purchase",
     "ecommerce": {
-        "transaction_id": "{{ enhancedEcommerce.purchase.id }}",
-        "value": {{ enhancedEcommerce.purchase.revenue }},
-        "tax": {{ enhancedEcommerce.purchase.tax }},
-        "shipping": {{ enhancedEcommerce.purchase.shipping }},
-        {% if enhancedEcommerce.purchase.coupon not empty %}"coupon": "enhancedEcommerce.purchase.coupon",{% endif %}
-        currency: "{{ enhancedEcommerce.currencyCode }}"
+        "transaction_id": "{{ enhancedEcommerce.ecommerce.purchase.actionField.id }}",
+        "value": {{ enhancedEcommerce.ecommerce.purchase.actionField.revenue }},
+        "tax": {{ enhancedEcommerce.ecommerce.purchase.actionField.tax }},
+        "shipping": {{ enhancedEcommerce.ecommerce.purchase.actionField.shipping }},
+        {% if enhancedEcommerce.ecommerce.purchase.actionField.coupon is not empty %}"coupon": "{{ enhancedEcommerce.ecommerce.purchase.actionField.coupon }}",{% endif %}
+        "currency": "{{ enhancedEcommerce.ecommerce.currencyCode }}"
     },
     "items": [
-        {% for product in enhancedEcommerce.products %}
+        {% for product in enhancedEcommerce.ecommerce.purchase.products %}
         {
             "item_name": '{{ product.name }}',
             "item_id": '{{ product.id }}',
             "item_brand": '{{ product.brand }}',
             "item_variant": '{{ product.variant }}',
             "quantity": {{ product.quantity }},
-            {% if product.coupon not empty %}"coupon": '{{ product.coupon }}',{% endif %}
+            {% if product.coupon is not empty %}"coupon": '{{ product.coupon }}',{% endif %}
             "price": '{{ product.price }}'
         }{% if loop.last != true %},{% endif %}
         {% endfor %}

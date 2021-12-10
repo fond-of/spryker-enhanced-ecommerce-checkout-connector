@@ -53,10 +53,13 @@ class PaymentSelectionRenderer implements EnhancedEcommerceRendererInterface
     public function render(Environment $twig, string $page, array $twigVariableBag): string
     {
         return $twig->render($this->getTemplate(), [
-            'data' => $this->removeEmptyArrayIndex(
+            'enhancedEcommerce' => array_merge(
+                [
+                    'paymentProvider' => $this->config->getPaymentMethodMapping(),
+                    'products' => $this->getProductsFromQuote()
+                ],
                 $this->createEnhancedEcommerceTransfer($twigVariableBag)->toArray(true, true)
-            ),
-            'paymentProvider' => $this->config->getPaymentMethodMapping(),
+            )
         ]);
     }
 
@@ -81,6 +84,20 @@ class PaymentSelectionRenderer implements EnhancedEcommerceRendererInterface
             ->setEventAction(ModuleConstants::EVENT_ACTION_CHECKOUT_OPTION)
             ->setEventLabel(ModuleConstants::STEP_PAYMENT_SELECTION)
             ->setEcommerce(['checkout_option' => $this->createEnhancedEcommerceCheckoutTransfer()->toArray(true, true)]);
+    }
+
+    /**
+     * @return \Generated\Shared\Transfer\ItemTransfer[]
+     */
+    protected function getProductsFromQuote(): array
+    {
+        $products = [];
+
+        foreach ($this->cartClient->getQuote()->getItems() as $itemTransfer) {
+            $products[] = $this->productModel->createFromItemTransfer($itemTransfer);
+        }
+
+        return $products;
     }
 
     /**

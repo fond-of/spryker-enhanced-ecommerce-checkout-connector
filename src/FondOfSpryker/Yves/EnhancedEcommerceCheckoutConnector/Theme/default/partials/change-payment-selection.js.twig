@@ -1,11 +1,52 @@
 jQuery(document).ready(function (e) {
     jQuery('#paymentForm_paymentSelection').on('change', function ()  {
-        eecLayer = {{ data|json_encode()|raw }};
-        availablePaymentProvider = {{ paymentProvider|json_encode|raw }}
+        var datalayer = {
+            "event": "genericEvent",
+            "eventCategory": "ecommerce",
+            "eventAction": "checkout_option",
+            "eventLabel": "2",
+            "ecommerce":{
+                "checkout_option":{
+                    "actionField": {
+                        "step": "2"
+                    }
+                }
+            }
+        };
+
+        var datalayerGA4 = {
+            "event": 'add_payment_info',
+            "ecommerce": {
+                "payment_type": '',
+                "items": [
+                    {% for product in enhancedEcommerce.products %}
+                    {
+                        "item_name": '{{ product.name }}',
+                        "item_id": '{{ product.id }}',
+                        "item_brand": '{{ product.brand }}',
+                        "item_variant": '{{ product.variant }}',
+                        "quantity": {{ product.quantity }},
+                        {% if product.coupon is not empty %}"coupon": '{{ product.coupon }}',{% endif %}
+                        "price": '{{ product.price }}'
+                    }{% if loop.last != true %},{% endif %}
+                    {% endfor %}
+                ]
+            }
+        }
+
+        availablePaymentProvider = {
+            {% for key, paymentProvider in enhancedEcommerce.paymentProvider %}
+                "{{ key }}": "{{ paymentProvider }}"{% if loop.last != true %},{% endif %}
+            {% endfor %}
+        }
+
         payment = availablePaymentProvider[jQuery(this).val()];
+        datalayer['ecommerce']['checkout_option']['actionField']['option'] = payment;
+        datalayerGA4['ecommerce']['payment_type'] = payment;
 
-        eecLayer['ecommerce']['checkout_option']['actionField']['option'] = payment;
-
-        window.dataLayer.push(eecLayer);
+        window.dataLayer = window.dataLayer || [];
+        window.dataLayer.push(datalayer);
+        window.dataLayer.push({ ecommerce: null });
+        window.dataLayer.push(datalayerGA4);
     });
 });

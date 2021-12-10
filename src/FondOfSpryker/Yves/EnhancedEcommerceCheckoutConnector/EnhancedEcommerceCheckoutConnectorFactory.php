@@ -7,14 +7,13 @@ use FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\Dependency\EnhancedEco
 use FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\Dependency\EnhancedEcommerceCheckoutConnectorToLocaleClientInterface;
 use FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\Dependency\EnhancedEcommerceCheckoutConnectorToProductStorageClientInterface;
 use FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\Dependency\EnhancedEcommerceCheckoutConnectorToStoreClientInterface;
-use FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\Expander\BillingAddressExpander;
 use FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\Expander\PaymentSelectionExpander;
-use FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\Expander\PurchaseExpander;
-use FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\Expander\SummaryExpander;
+use FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\Renderer\PurchaseRenderer;
 use FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\Model\ProductModel;
 use FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\Model\ProductModelInterface;
 use FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\Renderer\BillingAddressRenderer;
 use FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\Renderer\PaymentSelectionRenderer;
+use FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\Renderer\SummaryRenderer;
 use FondOfSpryker\Yves\EnhancedEcommerceExtension\Dependency\EnhancedEcommerceDataLayerExpanderInterface;
 use FondOfSpryker\Yves\EnhancedEcommerceExtension\Dependency\EnhancedEcommerceRendererInterface;
 use Spryker\Yves\Kernel\AbstractFactory;
@@ -45,21 +44,19 @@ class EnhancedEcommerceCheckoutConnectorFactory extends AbstractFactory
      */
     public function createPurchaseRenderer(): EnhancedEcommerceRendererInterface
     {
-        return new PurchaseExpander(
-            $this->getCartClient(),
+        return new PurchaseRenderer(
             $this->createProductModel(),
-            $this->getConfig(),
             $this->getStoreClient(),
             $this->getIntegerToDecimalConverter()
         );
     }
 
     /**
-     * @return \FondOfSpryker\Yves\EnhancedEcommerceExtension\Dependency\EnhancedEcommerceDataLayerExpanderInterface
+     * @return \FondOfSpryker\Yves\EnhancedEcommerceExtension\Dependency\EnhancedEcommerceRendererInterface
      */
-    public function createSummaryExpander(): EnhancedEcommerceDataLayerExpanderInterface
+    public function createSummaryRenderer(): EnhancedEcommerceRendererInterface
     {
-        return new SummaryExpander();
+        return new SummaryRenderer();
     }
 
     /**

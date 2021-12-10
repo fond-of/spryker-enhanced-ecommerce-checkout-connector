@@ -1,6 +1,6 @@
 <?php
 
-namespace FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\Expander;
+namespace FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\Renderer;
 
 use FondOfSpryker\Shared\EnhancedEcommerceCheckoutConnector\EnhancedEcommerceCheckoutConnectorConstants as ModuleConstants;
 use FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\Converter\IntegerToDecimalConverterInterface;
@@ -15,7 +15,7 @@ use Generated\Shared\Transfer\EnhancedEcommerceTransfer;
 use Generated\Shared\Transfer\OrderTransfer;
 use Twig\Environment;
 
-class PurchaseExpander implements EnhancedEcommerceRendererInterface
+class PurchaseRenderer implements EnhancedEcommerceRendererInterface
 {
     /**
      * @var \FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\Dependency\EnhancedEcommerceCheckoutConnectorToStoreClientInterface
@@ -28,21 +28,21 @@ class PurchaseExpander implements EnhancedEcommerceRendererInterface
     protected $integerToDecimalConverter;
 
     /**
-     * @param \FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\Dependency\EnhancedEcommerceCheckoutConnectorToCartClientInterface $cartClient
+     * @var \FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\Model\ProductModelInterface
+     */
+    protected $productModel;
+
+    /**
      * @param \FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\Model\ProductModelInterface $productModel
-     * @param \FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\EnhancedEcommerceCheckoutConnectorConfig $config
      * @param \FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\Dependency\EnhancedEcommerceCheckoutConnectorToStoreClientInterface $storeClient
      * @param \FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\Converter\IntegerToDecimalConverterInterface $integerToDecimalConverter
      */
     public function __construct(
-        EnhancedEcommerceCheckoutConnectorToCartClientInterface $cartClient,
         ProductModelInterface $productModel,
-        EnhancedEcommerceCheckoutConnectorConfig $config,
         EnhancedEcommerceCheckoutConnectorToStoreClientInterface $storeClient,
         IntegerToDecimalConverterInterface $integerToDecimalConverter
     ) {
-        parent::__construct($cartClient, $productModel, $config);
-
+        $this->productModel = $productModel;
         $this->storeClient = $storeClient;
         $this->integerToDecimalConverter = $integerToDecimalConverter;
     }
@@ -105,7 +105,7 @@ class PurchaseExpander implements EnhancedEcommerceRendererInterface
             );
         }
 
-        return $this->deleteEmptyIndexesFromDatalayer($enhancedEcommerceCheckoutTransfer->toArray(true, true));
+        return $enhancedEcommerceCheckoutTransfer->toArray(true, true);
     }
 
     /**

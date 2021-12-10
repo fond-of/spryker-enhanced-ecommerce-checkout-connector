@@ -1,15 +1,16 @@
 <?php
 
-namespace FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\Plugin\Expander;
+namespace FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\Plugin\Renderer;
 
 use FondOfSpryker\Shared\EnhancedEcommerceCheckoutConnector\EnhancedEcommerceCheckoutConnectorConstants;
-use FondOfSpryker\Yves\EnhancedEcommerceExtension\Dependency\EnhancedEcommerceDataLayerExpanderPluginInterface;
+use FondOfSpryker\Yves\EnhancedEcommerceExtension\Dependency\EnhancedEcommerceRenderePluginInterface;
 use Spryker\Yves\Kernel\AbstractPlugin;
+use Twig\Environment;
 
 /**
  * @method \FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\EnhancedEcommerceCheckoutConnectorFactory getFactory()
  */
-class SummaryExpanderPlugin extends AbstractPlugin implements EnhancedEcommerceDataLayerExpanderPluginInterface
+class SummaryRendererPlugin extends AbstractPlugin implements EnhancedEcommerceRenderePluginInterface
 {
     /**
      * @param string $pageType
@@ -23,16 +24,16 @@ class SummaryExpanderPlugin extends AbstractPlugin implements EnhancedEcommerceD
     }
 
     /**
+     * @param \Twig\Environment $twig
      * @param string $page
      * @param array $twigVariableBag
-     * @param array $dataLayer
      *
-     * @return array
+     * @return string
      */
-    public function expand(string $page, array $twigVariableBag, array $dataLayer): array
+    public function render(Environment $twig, string $page, array $twigVariableBag): string
     {
         return $this->getFactory()
-            ->createSummaryExpander()
-            ->expand($page, $twigVariableBag, $dataLayer);
+            ->createSummaryRenderer()
+            ->render($twig, $page, $twigVariableBag);
     }
 }

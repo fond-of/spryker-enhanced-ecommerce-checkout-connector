@@ -21,9 +21,19 @@ class PurchaseRendererPlugin extends AbstractPlugin implements EnhancedEcommerce
      */
     public function isApplicable(string $pageType, array $twigVariableBag = []): bool
     {
-        return $pageType === ModuleConstants::PAGE_TYPE_PURCHASE &&
-            isset($twigVariableBag[ModuleConstants::PARAM_ORDER]) &&
-            $twigVariableBag[ModuleConstants::PARAM_ORDER] instanceof OrderTransfer;
+        if ($pageType !== ModuleConstants::PAGE_TYPE_PURCHASE) {
+            return false;
+        }
+
+        if (!isset($twigVariableBag[ModuleConstants::PARAM_ORDER])) {
+            return false;
+        }
+
+        if (!$twigVariableBag[ModuleConstants::PARAM_ORDER] instanceof OrderTransfer) {
+            return false;
+        }
+
+        return true;
     }
 
     /**

@@ -17,7 +17,7 @@ var datalayer = {
                     brand: '{{ product.brand }}',
                     dimension10: '{{ product.dimension10 }}',
                     quantity: {{ product.quantity }},
-                    {% if product.coupon not empty %}coupon: '{{ product.coupon }}',{% endif %}
+                    {% if product.coupon is not empty %}coupon: '{{ product.coupon }}',{% endif %}
                     price: '{{ product.price }}'
                 }{% if loop.last != true %},{% endif %}
                 {% endfor %}
@@ -37,7 +37,7 @@ var datalayerGA4 = {
                 item_brand: '{{ product.brand }}',
                 item_variant: '{{ product.variant }}',
                 quantity: {{ product.quantity }},
-                {% if product.coupon not empty %}coupon: '{{ product.coupon }}',{% endif %}
+                {% if product.coupon is not empty %}coupon: '{{ product.coupon }}',{% endif %}
                 dimension10: '{{ product.dimension10 }}',
                 price: '{{ product.price }}'
             }{% if loop.last != true %},{% endif %}
