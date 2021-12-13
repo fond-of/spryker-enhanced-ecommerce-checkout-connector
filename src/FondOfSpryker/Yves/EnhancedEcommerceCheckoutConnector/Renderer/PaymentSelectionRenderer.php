@@ -52,14 +52,13 @@ class PaymentSelectionRenderer implements EnhancedEcommerceRendererInterface
      */
     public function render(Environment $twig, string $page, array $twigVariableBag): string
     {
+        $foo = ['enhancedEcommerce' => $this->createEnhancedEcommerceTransfer($twigVariableBag)];
+
         return $twig->render($this->getTemplate(), [
-            'enhancedEcommerce' => array_merge(
-                [
-                    'paymentProvider' => $this->config->getPaymentMethodMapping(),
-                    'products' => $this->getProductsFromQuote()
-                ],
-                $this->createEnhancedEcommerceTransfer($twigVariableBag)->toArray(true, true)
-            )
+            'config' => [
+                'paymentProvider' => $this->config->getPaymentMethodMapping(),
+            ],
+            'enhancedEcommerce' => $this->createEnhancedEcommerceTransfer($twigVariableBag),
         ]);
     }
 
@@ -78,26 +77,18 @@ class PaymentSelectionRenderer implements EnhancedEcommerceRendererInterface
      */
     protected function createEnhancedEcommerceTransfer(array $twigVariableBag): EnhancedEcommerceTransfer
     {
-        return (new EnhancedEcommerceTransfer())
+        $enhancedEcommerceTransfer = (new EnhancedEcommerceTransfer())
             ->setEvent(ModuleConstants::EVENT_NAME)
             ->setEventCategory(ModuleConstants::EVENT_CATEGORY)
             ->setEventAction(ModuleConstants::EVENT_ACTION_CHECKOUT_OPTION)
             ->setEventLabel(ModuleConstants::STEP_PAYMENT_SELECTION)
-            ->setEcommerce(['checkout_option' => $this->createEnhancedEcommerceCheckoutTransfer()->toArray(true, true)]);
-    }
-
-    /**
-     * @return \Generated\Shared\Transfer\ItemTransfer[]
-     */
-    protected function getProductsFromQuote(): array
-    {
-        $products = [];
+            ->setEcommerce(['checkout_option' => $this->createEnhancedEcommerceCheckoutTransfer()]);
 
         foreach ($this->cartClient->getQuote()->getItems() as $itemTransfer) {
-            $products[] = $this->productModel->createFromItemTransfer($itemTransfer);
+            $enhancedEcommerceTransfer->addProduct($this->productModel->createFromItemTransfer($itemTransfer));
         }
 
-        return $products;
+        return $enhancedEcommerceTransfer;
     }
 
     /**
@@ -110,25 +101,5 @@ class PaymentSelectionRenderer implements EnhancedEcommerceRendererInterface
                 'step' => ModuleConstants::STEP_PAYMENT_SELECTION,
                 'option' => '',
             ]);
-    }
-
-    /**
-     * @param array $haystack
-     *
-     * @return array
-     */
-    protected function removeEmptyArrayIndex(array $haystack): array
-    {
-        foreach ($haystack as $key => $value) {
-            if (is_array($value)) {
-                $haystack[$key] = $this->removeEmptyArrayIndex($haystack[$key]);
-            }
-
-            if (!$value) {
-                unset($haystack[$key]);
-            }
-        }
-
-        return $haystack;
     }
 }

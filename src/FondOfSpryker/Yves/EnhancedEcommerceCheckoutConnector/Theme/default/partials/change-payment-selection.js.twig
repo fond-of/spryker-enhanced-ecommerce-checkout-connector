@@ -35,7 +35,7 @@ jQuery(document).ready(function (e) {
         }
 
         availablePaymentProvider = {
-            {% for key, paymentProvider in enhancedEcommerce.paymentProvider %}
+            {% for key, paymentProvider in config.paymentProvider %}
                 "{{ key }}": "{{ paymentProvider }}"{% if loop.last != true %},{% endif %}
             {% endfor %}
         }

@@ -15,7 +15,7 @@ datalayer = {
                 "shipping": {{ enhancedEcommerce.ecommerce.purchase.actionField.shipping }}
             },
             "products": [
-                {% for product in enhancedEcommerce.ecommerce.purchase.products %}
+                {% for product in enhancedEcommerce.products %}
                 {
                     "id": '{{ product.id }}',
                     "name": '{{ product.name }}',
@@ -32,7 +32,7 @@ datalayer = {
     }
 }
 
-var datalayer4GA = {
+var datalayerGA4 = {
     "event": "purchase",
     "ecommerce": {
         "transaction_id": "{{ enhancedEcommerce.ecommerce.purchase.actionField.id }}",
@@ -43,7 +43,7 @@ var datalayer4GA = {
         "currency": "{{ enhancedEcommerce.ecommerce.currencyCode }}"
     },
     "items": [
-        {% for product in enhancedEcommerce.ecommerce.purchase.products %}
+        {% for product in enhancedEcommerce.products %}
         {
             "item_name": '{{ product.name }}',
             "item_id": '{{ product.id }}',

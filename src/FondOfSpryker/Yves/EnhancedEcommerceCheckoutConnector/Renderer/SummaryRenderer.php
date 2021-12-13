@@ -2,11 +2,7 @@
 
 namespace FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\Renderer;
 
-use FondOfSpryker\Shared\EnhancedEcommerceCheckoutConnector\EnhancedEcommerceCheckoutConnectorConstants as ModuleConstants;
-use FondOfSpryker\Yves\EnhancedEcommerceExtension\Dependency\EnhancedEcommerceDataLayerExpanderInterface;
 use FondOfSpryker\Yves\EnhancedEcommerceExtension\Dependency\EnhancedEcommerceRendererInterface;
-use Generated\Shared\Transfer\EnhancedEcommerceCheckoutTransfer;
-use Generated\Shared\Transfer\EnhancedEcommerceTransfer;
 use Twig\Environment;
 
 class SummaryRenderer implements EnhancedEcommerceRendererInterface

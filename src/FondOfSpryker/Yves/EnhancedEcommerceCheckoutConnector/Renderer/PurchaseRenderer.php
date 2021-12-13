@@ -4,11 +4,8 @@ namespace FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\Renderer;
 
 use FondOfSpryker\Shared\EnhancedEcommerceCheckoutConnector\EnhancedEcommerceCheckoutConnectorConstants as ModuleConstants;
 use FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\Converter\IntegerToDecimalConverterInterface;
-use FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\Dependency\EnhancedEcommerceCheckoutConnectorToCartClientInterface;
 use FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\Dependency\EnhancedEcommerceCheckoutConnectorToStoreClientInterface;
-use FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\EnhancedEcommerceCheckoutConnectorConfig;
 use FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\Model\ProductModelInterface;
-use FondOfSpryker\Yves\EnhancedEcommerceExtension\Dependency\EnhancedEcommerceDataLayerExpanderInterface;
 use FondOfSpryker\Yves\EnhancedEcommerceExtension\Dependency\EnhancedEcommerceRendererInterface;
 use Generated\Shared\Transfer\EnhancedEcommerceCheckoutTransfer;
 use Generated\Shared\Transfer\EnhancedEcommerceTransfer;
@@ -66,8 +63,10 @@ class PurchaseRenderer implements EnhancedEcommerceRendererInterface
                 ModuleConstants::PAGE_TYPE_PURCHASE => $this->createEnhancedEcommerceCheckoutTransfer($twigVariableBag),
             ]);
 
+        $enhancedEcommerceTransfer = $this->addProducts($enhancedEcommerceTransfer, $twigVariableBag);
+
         return $twig->render($this->getTemplate(), [
-            'enhancedEcommerce' => $enhancedEcommerceTransfer->toArray(true, true),
+            'enhancedEcommerce' => $enhancedEcommerceTransfer,
         ]);
     }
 
@@ -82,14 +81,14 @@ class PurchaseRenderer implements EnhancedEcommerceRendererInterface
     /**
      * @param array $twigVariableBag
      *
-     * @return array
+     * @return \Generated\Shared\Transfer\EnhancedEcommerceCheckoutTransfer
      */
-    protected function createEnhancedEcommerceCheckoutTransfer(array $twigVariableBag): array
+    protected function createEnhancedEcommerceCheckoutTransfer(array $twigVariableBag): EnhancedEcommerceCheckoutTransfer
     {
         /** @var \Generated\Shared\Transfer\OrderTransfer $orderTransfer */
         $orderTransfer = $twigVariableBag[ModuleConstants::PARAM_ORDER];
 
-        $enhancedEcommerceCheckoutTransfer = (new EnhancedEcommerceCheckoutTransfer())
+        return (new EnhancedEcommerceCheckoutTransfer())
             ->setActionField([
                 ModuleConstants::EVENT_ACTION_PURCHASE_FIELD_ID => $orderTransfer->getOrderReference(),
                 ModuleConstants::EVENT_ACTION_PURCHASE_FIELD_AFFILIATION => $orderTransfer->getStore(),
@@ -98,14 +97,28 @@ class PurchaseRenderer implements EnhancedEcommerceRendererInterface
                 ModuleConstants::EVENT_ACTION_PURCHASE_FIELD_SHIPPING => $this->getShippingTotal($orderTransfer),
                 ModuleConstants::EVENT_ACTION_PURCHASE_FIELD_COUPON => implode(',', $this->getDiscountCodesFromOrder($orderTransfer)),
             ]);
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\EnhancedEcommerceTransfer $enhancedEcommerceTransfer
+     * @param array $twigVariableBag
+     *
+     * @return \Generated\Shared\Transfer\EnhancedEcommerceTransfer
+     */
+    protected function addProducts(
+        EnhancedEcommerceTransfer $enhancedEcommerceTransfer,
+        array $twigVariableBag
+    ): EnhancedEcommerceTransfer {
+        /** @var \Generated\Shared\Transfer\OrderTransfer $orderTransfer */
+        $orderTransfer = $twigVariableBag[ModuleConstants::PARAM_ORDER];
 
         foreach ($this->mergeMultipleProducts($orderTransfer) as $itemTransfer) {
-            $enhancedEcommerceCheckoutTransfer->addProduct(
+            $enhancedEcommerceTransfer->addProduct(
                 $this->productModel->createFromItemTransfer($itemTransfer)
             );
         }
 
-        return $enhancedEcommerceCheckoutTransfer->toArray(true, true);
+        return $enhancedEcommerceTransfer;
     }
 
     /**
