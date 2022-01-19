@@ -5,7 +5,6 @@ namespace FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\Plugin\Renderer;
 use Codeception\Test\Unit;
 use FondOfSpryker\Shared\EnhancedEcommerceCheckoutConnector\EnhancedEcommerceCheckoutConnectorConstants as ModuleConstants;
 use FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\EnhancedEcommerceCheckoutConnectorFactory;
-use FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\Renderer\PaymentSelectionRenderer;
 use FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\Renderer\PurchaseRenderer;
 use Generated\Shared\Transfer\OrderTransfer;
 use Twig\Environment;
@@ -70,7 +69,7 @@ class PurchaseRendererPluginTest extends Unit
     public function testIsApplicableTrue(): void
     {
         static::assertEquals(true, $this->plugin->isApplicable(ModuleConstants::PAGE_TYPE_PURCHASE, [
-            ModuleConstants::PARAM_ORDER => $this->orderTransferMock
+            ModuleConstants::PARAM_ORDER => $this->orderTransferMock,
         ]));
     }
 
@@ -80,7 +79,7 @@ class PurchaseRendererPluginTest extends Unit
     public function testIsApplicableFalseWrongPageType(): void
     {
         static::assertEquals(true, $this->plugin->isApplicable('somePage', [
-            ModuleConstants::PARAM_ORDER => $this->orderTransferMock
+            ModuleConstants::PARAM_ORDER => $this->orderTransferMock,
         ]));
     }
 
@@ -98,7 +97,7 @@ class PurchaseRendererPluginTest extends Unit
     public function testIsApplicableFalseOrderNotInstanceOfOrderTranfser(): void
     {
         static::assertEquals(true, $this->plugin->isApplicable(ModuleConstants::PAGE_TYPE_PURCHASE, [
-            ModuleConstants::PARAM_ORDER => ''
+            ModuleConstants::PARAM_ORDER => '',
         ]));
     }
 
@@ -117,7 +116,7 @@ class PurchaseRendererPluginTest extends Unit
             ->willReturn('response as string');
 
         static::assertEquals('response as string', $this->plugin->render($this->twigMock, ModuleConstants::PAGE_TYPE_PAYMENT_SELECTION, [
-            ModuleConstants::PARAM_ORDER => $this->orderTransferMock
+            ModuleConstants::PARAM_ORDER => $this->orderTransferMock,
         ]));
     }
 }
