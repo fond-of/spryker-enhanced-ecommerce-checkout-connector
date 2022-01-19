@@ -78,7 +78,7 @@ class PurchaseRendererPluginTest extends Unit
      */
     public function testIsApplicableFalseWrongPageType(): void
     {
-        static::assertEquals(true, $this->plugin->isApplicable('somePage', [
+        static::assertEquals(false, $this->plugin->isApplicable('somePage', [
             ModuleConstants::PARAM_ORDER => $this->orderTransferMock,
         ]));
     }
@@ -88,7 +88,7 @@ class PurchaseRendererPluginTest extends Unit
      */
     public function testIsApplicableFalseOrderNotSet(): void
     {
-        static::assertEquals(true, $this->plugin->isApplicable(ModuleConstants::PAGE_TYPE_PURCHASE, []));
+        static::assertEquals(false, $this->plugin->isApplicable(ModuleConstants::PAGE_TYPE_PURCHASE, []));
     }
 
     /**
@@ -96,7 +96,7 @@ class PurchaseRendererPluginTest extends Unit
      */
     public function testIsApplicableFalseOrderNotInstanceOfOrderTranfser(): void
     {
-        static::assertEquals(true, $this->plugin->isApplicable(ModuleConstants::PAGE_TYPE_PURCHASE, [
+        static::assertEquals(false, $this->plugin->isApplicable(ModuleConstants::PAGE_TYPE_PURCHASE, [
             ModuleConstants::PARAM_ORDER => '',
         ]));
     }
@@ -107,16 +107,14 @@ class PurchaseRendererPluginTest extends Unit
     public function testRender(): void
     {
         $this->factoryMock->expects(static::atLeastOnce())
-            ->method('createPaymentSelectionRenderer')
+            ->method('createPurchaseRenderer')
             ->willReturn($this->rendererMock);
 
         $this->rendererMock->expects(static::atLeastOnce())
             ->method('render')
             ->with($this->twigMock, ModuleConstants::PAGE_TYPE_PURCHASE, [])
-            ->willReturn('response as string');
+            ->willReturn('checkoutPayment');
 
-        static::assertEquals('response as string', $this->plugin->render($this->twigMock, ModuleConstants::PAGE_TYPE_PAYMENT_SELECTION, [
-            ModuleConstants::PARAM_ORDER => $this->orderTransferMock,
-        ]));
+        $this->plugin->render($this->twigMock, ModuleConstants::PAGE_TYPE_PURCHASE, []);
     }
 }

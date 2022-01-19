@@ -52,8 +52,6 @@ class PaymentSelectionRenderer implements EnhancedEcommerceRendererInterface
      */
     public function render(Environment $twig, string $page, array $twigVariableBag): string
     {
-        $foo = ['enhancedEcommerce' => $this->createEnhancedEcommerceTransfer($twigVariableBag)];
-
         return $twig->render($this->getTemplate(), [
             'config' => [
                 'paymentProvider' => $this->config->getPaymentMethodMapping(),

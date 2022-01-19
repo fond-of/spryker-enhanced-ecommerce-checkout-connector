@@ -6,6 +6,8 @@ use Codeception\Test\Unit;
 use FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\Dependency\EnhancedEcommerceCheckoutConnectorToCartClientInterface;
 use FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\EnhancedEcommerceCheckoutConnectorConfig;
 use FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\Model\ProductModel;
+use Generated\Shared\Transfer\ItemTransfer;
+use Generated\Shared\Transfer\QuoteTransfer;
 use Twig\Environment;
 
 class PaymentSelectionRendererTest extends Unit
@@ -29,6 +31,16 @@ class PaymentSelectionRendererTest extends Unit
      * @var \PHPUnit\Framework\MockObject\MockObject|\FondOfSpryker\Yves\EnhancedEcommerceCartConnector\EnhancedEcommerceCartConnectorConfig
      */
     protected $configMock;
+
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject|\Generated\Shared\Transfer\QuoteTransfer
+     */
+    protected $quoteTransferMock;
+
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject|\Generated\Shared\Transfer\ItemTransfer
+     */
+    protected $itemTransferMock;
 
     /**
      * @var \FondOfSpryker\Yves\EnhancedEcommerceExtension\Dependency\EnhancedEcommerceRendererInterface
@@ -56,6 +68,14 @@ class PaymentSelectionRendererTest extends Unit
             ->disableOriginalConstructor()
             ->getMock();
 
+        $this->quoteTransferMock = $this->getMockBuilder(QuoteTransfer::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $this->itemTransferMock = $this->getMockBuilder(ItemTransfer::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
         $this->renderer = new PaymentSelectionRenderer(
             $this->cartClientMock,
             $this->productModelMock,
@@ -68,6 +88,18 @@ class PaymentSelectionRendererTest extends Unit
      */
     public function testExpand(): void
     {
+        $this->cartClientMock->expects(static::atLeastOnce())
+            ->method('getQuote')
+            ->willReturn($this->quoteTransferMock);
+
+        $this->quoteTransferMock->expects(static::atLeastOnce())
+            ->method('getItems')
+            ->willReturn([$this->itemTransferMock]);
+
+        $this->twigMock->expects(static::atLeastOnce())
+            ->method('render')
+            ->willReturn('rendered template');
+
         $this->renderer->render($this->twigMock, 'page', []);
     }
 }

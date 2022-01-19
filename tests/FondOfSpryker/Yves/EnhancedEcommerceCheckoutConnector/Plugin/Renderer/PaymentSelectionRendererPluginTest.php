@@ -66,7 +66,7 @@ class PaymentSelectionRendererPluginTest extends Unit
      */
     public function testIsApplicableFalse(): void
     {
-        static::assertEquals(true, $this->plugin->isApplicable('somePage', []));
+        static::assertEquals(false, $this->plugin->isApplicable('somePage', []));
     }
 
     /**
