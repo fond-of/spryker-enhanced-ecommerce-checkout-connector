@@ -68,6 +68,6 @@ class PaymentSelectionRendererTest extends Unit
      */
     public function testExpand(): void
     {
-        $this->renderer->expand($this->twigMock, 'page', []);
+        $this->renderer->render($this->twigMock, 'page', []);
     }
 }

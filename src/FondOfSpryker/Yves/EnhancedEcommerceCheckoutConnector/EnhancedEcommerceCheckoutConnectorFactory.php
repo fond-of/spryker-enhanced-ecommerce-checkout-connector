@@ -32,14 +32,6 @@ class EnhancedEcommerceCheckoutConnectorFactory extends AbstractFactory
     }
 
     /**
-     * @return \FondOfSpryker\Yves\EnhancedEcommerceExtension\Dependency\EnhancedEcommerceDataLayerExpanderInterface
-     */
-    public function createPaymentSelectionExpander(): EnhancedEcommerceDataLayerExpanderInterface
-    {
-        return new PaymentSelectionExpander();
-    }
-
-    /**
      * @return \FondOfSpryker\Yves\EnhancedEcommerceExtension\Dependency\EnhancedEcommerceRendererInterface
      */
     public function createPurchaseRenderer(): EnhancedEcommerceRendererInterface

@@ -16,7 +16,7 @@ jQuery(document).ready(function (e) {
 
         var datalayerGA4 = {
             "event": 'add_payment_info',
-            "ecommerce": {
+            "ecommerce_ga4": {
                 "payment_type": '',
                 "items": [
                     {% for product in enhancedEcommerce.products %}
@@ -42,11 +42,11 @@ jQuery(document).ready(function (e) {
 
         payment = availablePaymentProvider[jQuery(this).val()];
         datalayer['ecommerce']['checkout_option']['actionField']['option'] = payment;
-        datalayerGA4['ecommerce']['payment_type'] = payment;
+        datalayerGA4['ecommerce_ga4']['payment_type'] = payment;
 
         window.dataLayer = window.dataLayer || [];
         window.dataLayer.push(datalayer);
-        window.dataLayer.push({ ecommerce: null });
+        window.dataLayer.push({ ecommerce_ga4: null });
         window.dataLayer.push(datalayerGA4);
     });
 });

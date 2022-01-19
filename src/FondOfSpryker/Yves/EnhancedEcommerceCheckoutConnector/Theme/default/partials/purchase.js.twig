@@ -34,7 +34,7 @@ datalayer = {
 
 var datalayerGA4 = {
     "event": "purchase",
-    "ecommerce": {
+    "ecommerce_ga4": {
         "transaction_id": "{{ enhancedEcommerce.ecommerce.purchase.actionField.id }}",
         "value": {{ enhancedEcommerce.ecommerce.purchase.actionField.revenue }},
         "tax": {{ enhancedEcommerce.ecommerce.purchase.actionField.tax }},
@@ -59,5 +59,5 @@ var datalayerGA4 = {
 
 window.dataLayer = window.dataLayer || [];
 window.dataLayer.push(datalayer);
-window.dataLayer.push({ ecommerce: null });
+window.dataLayer.push({ ecommerce_ga4: null });
 window.dataLayer.push(datalayerGA4);
