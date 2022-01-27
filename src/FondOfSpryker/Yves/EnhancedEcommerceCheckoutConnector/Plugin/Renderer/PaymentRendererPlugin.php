@@ -10,7 +10,7 @@ use Twig\Environment;
 /**
  * @method \FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\EnhancedEcommerceCheckoutConnectorFactory getFactory()
  */
-class PaymentRenderer extends AbstractPlugin implements EnhancedEcommerceRenderePluginInterface
+class PaymentRendererPlugin extends AbstractPlugin implements EnhancedEcommerceRenderePluginInterface
 {
     /**
      * @param string $pageType
