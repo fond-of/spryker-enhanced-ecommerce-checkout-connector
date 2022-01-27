@@ -10,6 +10,7 @@ use FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\Dependency\EnhancedEco
 use FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\Model\ProductModel;
 use FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\Model\ProductModelInterface;
 use FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\Renderer\BillingAddressRenderer;
+use FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\Renderer\PaymentRenderer;
 use FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\Renderer\PaymentSelectionRenderer;
 use FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\Renderer\PurchaseRenderer;
 use FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\Renderer\SummaryRenderer;
@@ -71,6 +72,14 @@ class EnhancedEcommerceCheckoutConnectorFactory extends AbstractFactory
             $this->createProductModel(),
             $this->getConfig()
         );
+    }
+
+    /**
+     * @return \FondOfSpryker\Yves\EnhancedEcommerceExtension\Dependency\EnhancedEcommerceRendererInterface
+     */
+    public function createPaymentRenderer(): EnhancedEcommerceRendererInterface
+    {
+        return new PaymentRenderer();
     }
 
     /**

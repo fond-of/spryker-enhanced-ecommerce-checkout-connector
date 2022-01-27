@@ -7,7 +7,9 @@ jQuery(document).ready(function (e) {
         "ecommerce":{
             "checkout_option":{
                 "actionField": {
-                    "step": "2"
+                    "action": "checkout_option",
+                    "step": "2",
+                    "option": ""
                 }
             }
         }
@@ -32,11 +34,6 @@ jQuery(document).ready(function (e) {
             ]
         }
     }
-
-    window.dataLayer = window.dataLayer || [];
-    window.dataLayer.push(datalayer);
-    window.dataLayer.push({ ecommerce_ga4: null });
-    window.dataLayer.push(datalayerGA4);
 
     jQuery('#paymentForm_paymentSelection').on('change', function ()  {
         availablePaymentProvider = {
