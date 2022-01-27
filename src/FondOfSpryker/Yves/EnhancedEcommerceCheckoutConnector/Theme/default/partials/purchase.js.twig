@@ -40,21 +40,21 @@ var datalayerGA4 = {
         "tax": {{ enhancedEcommerce.ecommerce.purchase.actionField.tax }},
         "shipping": {{ enhancedEcommerce.ecommerce.purchase.actionField.shipping }},
         {% if enhancedEcommerce.ecommerce.purchase.actionField.coupon is not empty %}"coupon": "{{ enhancedEcommerce.ecommerce.purchase.actionField.coupon }}",{% endif %}
-        "currency": "{{ enhancedEcommerce.ecommerce.currencyCode }}"
+        "currency": "{{ enhancedEcommerce.ecommerce.currencyCode }}",
+        "items": [
+            {% for product in enhancedEcommerce.products %}
+            {
+                "item_name": '{{ product.name }}',
+                "item_id": '{{ product.id }}',
+                "item_brand": '{{ product.brand }}',
+                "item_variant": '{{ product.variant }}',
+                "quantity": {{ product.quantity }},
+                {% if product.coupon is not empty %}"coupon": '{{ product.coupon }}',{% endif %}
+                "price": '{{ product.price }}'
+            }{% if loop.last != true %},{% endif %}
+            {% endfor %}
+        ]
     },
-    "items": [
-        {% for product in enhancedEcommerce.products %}
-        {
-            "item_name": '{{ product.name }}',
-            "item_id": '{{ product.id }}',
-            "item_brand": '{{ product.brand }}',
-            "item_variant": '{{ product.variant }}',
-            "quantity": {{ product.quantity }},
-            {% if product.coupon is not empty %}"coupon": '{{ product.coupon }}',{% endif %}
-            "price": '{{ product.price }}'
-        }{% if loop.last != true %},{% endif %}
-        {% endfor %}
-    ]
 }
 
 window.dataLayer = window.dataLayer || [];
