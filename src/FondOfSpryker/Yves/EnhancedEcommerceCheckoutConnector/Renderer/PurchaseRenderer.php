@@ -1,19 +1,19 @@
 <?php
 
-namespace FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\Expander;
+namespace FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\Renderer;
 
 use FondOfSpryker\Shared\EnhancedEcommerceCheckoutConnector\EnhancedEcommerceCheckoutConnectorConstants as ModuleConstants;
 use FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\Converter\IntegerToDecimalConverterInterface;
-use FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\Dependency\EnhancedEcommerceCheckoutConnectorToCartClientInterface;
 use FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\Dependency\EnhancedEcommerceCheckoutConnectorToStoreClientInterface;
 use FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\EnhancedEcommerceCheckoutConnectorConfig;
 use FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\Model\ProductModelInterface;
-use FondOfSpryker\Yves\EnhancedEcommerceExtension\Dependency\EnhancedEcommerceDataLayerExpanderInterface;
+use FondOfSpryker\Yves\EnhancedEcommerceExtension\Dependency\EnhancedEcommerceRendererInterface;
 use Generated\Shared\Transfer\EnhancedEcommerceCheckoutTransfer;
 use Generated\Shared\Transfer\EnhancedEcommerceTransfer;
 use Generated\Shared\Transfer\OrderTransfer;
+use Twig\Environment;
 
-class PurchaseExpander extends BillingAddressExpander implements EnhancedEcommerceDataLayerExpanderInterface
+class PurchaseRenderer implements EnhancedEcommerceRendererInterface
 {
     /**
      * @var \FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\Dependency\EnhancedEcommerceCheckoutConnectorToStoreClientInterface
@@ -26,33 +26,33 @@ class PurchaseExpander extends BillingAddressExpander implements EnhancedEcommer
     protected $integerToDecimalConverter;
 
     /**
-     * @param \FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\Dependency\EnhancedEcommerceCheckoutConnectorToCartClientInterface $cartClient
+     * @var \FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\Model\ProductModelInterface
+     */
+    protected $productModel;
+
+    /**
      * @param \FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\Model\ProductModelInterface $productModel
-     * @param \FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\EnhancedEcommerceCheckoutConnectorConfig $config
      * @param \FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\Dependency\EnhancedEcommerceCheckoutConnectorToStoreClientInterface $storeClient
      * @param \FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\Converter\IntegerToDecimalConverterInterface $integerToDecimalConverter
      */
     public function __construct(
-        EnhancedEcommerceCheckoutConnectorToCartClientInterface $cartClient,
         ProductModelInterface $productModel,
-        EnhancedEcommerceCheckoutConnectorConfig $config,
         EnhancedEcommerceCheckoutConnectorToStoreClientInterface $storeClient,
         IntegerToDecimalConverterInterface $integerToDecimalConverter
     ) {
-        parent::__construct($cartClient, $productModel, $config);
-
+        $this->productModel = $productModel;
         $this->storeClient = $storeClient;
         $this->integerToDecimalConverter = $integerToDecimalConverter;
     }
 
     /**
+     * @param \Twig\Environment $twig
      * @param string $page
-     * @param array $twigVariableBag$productModel
-     * @param array $dataLayer
+     * @param array<string, mixed> $twigVariableBag
      *
-     * @return array
+     * @return string
      */
-    public function expand(string $page, array $twigVariableBag, array $dataLayer): array
+    public function render(Environment $twig, string $page, array $twigVariableBag): string
     {
         $enhancedEcommerceTransfer = (new EnhancedEcommerceTransfer())
             ->setEvent(ModuleConstants::EVENT_NAME)
@@ -64,20 +64,32 @@ class PurchaseExpander extends BillingAddressExpander implements EnhancedEcommer
                 ModuleConstants::PAGE_TYPE_PURCHASE => $this->createEnhancedEcommerceCheckoutTransfer($twigVariableBag),
             ]);
 
-        return $enhancedEcommerceTransfer->toArray(true, true);
+        $enhancedEcommerceTransfer = $this->addProducts($enhancedEcommerceTransfer, $twigVariableBag);
+
+        return $twig->render($this->getTemplate(), [
+            'enhancedEcommerce' => $enhancedEcommerceTransfer,
+        ]);
     }
 
     /**
-     * @param array $twigVariableBag
-     *
-     * @return array
+     * @return string
      */
-    protected function createEnhancedEcommerceCheckoutTransfer(array $twigVariableBag): array
+    public function getTemplate(): string
+    {
+        return '@EnhancedEcommerceCheckoutConnector/partials/purchase.js.twig';
+    }
+
+    /**
+     * @param array<string, mixed> $twigVariableBag
+     *
+     * @return \Generated\Shared\Transfer\EnhancedEcommerceCheckoutTransfer
+     */
+    protected function createEnhancedEcommerceCheckoutTransfer(array $twigVariableBag): EnhancedEcommerceCheckoutTransfer
     {
         /** @var \Generated\Shared\Transfer\OrderTransfer $orderTransfer */
         $orderTransfer = $twigVariableBag[ModuleConstants::PARAM_ORDER];
 
-        $enhancedEcommerceCheckoutTransfer = (new EnhancedEcommerceCheckoutTransfer())
+        return (new EnhancedEcommerceCheckoutTransfer())
             ->setActionField([
                 ModuleConstants::EVENT_ACTION_PURCHASE_FIELD_ID => $orderTransfer->getOrderReference(),
                 ModuleConstants::EVENT_ACTION_PURCHASE_FIELD_AFFILIATION => $orderTransfer->getStore(),
@@ -86,24 +98,38 @@ class PurchaseExpander extends BillingAddressExpander implements EnhancedEcommer
                 ModuleConstants::EVENT_ACTION_PURCHASE_FIELD_SHIPPING => $this->getShippingTotal($orderTransfer),
                 ModuleConstants::EVENT_ACTION_PURCHASE_FIELD_COUPON => implode(',', $this->getDiscountCodesFromOrder($orderTransfer)),
             ]);
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\EnhancedEcommerceTransfer $enhancedEcommerceTransfer
+     * @param array<string, mixed> $twigVariableBag
+     *
+     * @return \Generated\Shared\Transfer\EnhancedEcommerceTransfer
+     */
+    protected function addProducts(
+        EnhancedEcommerceTransfer $enhancedEcommerceTransfer,
+        array $twigVariableBag
+    ): EnhancedEcommerceTransfer {
+        /** @var \Generated\Shared\Transfer\OrderTransfer $orderTransfer */
+        $orderTransfer = $twigVariableBag[ModuleConstants::PARAM_ORDER];
 
         foreach ($this->mergeMultipleProducts($orderTransfer) as $itemTransfer) {
-            $enhancedEcommerceCheckoutTransfer->addProduct(
-                $this->productModel->createFromItemTransfer($itemTransfer)
+            $enhancedEcommerceTransfer->addProduct(
+                $this->productModel->createFromItemTransfer($itemTransfer),
             );
         }
 
-        return $this->deleteEmptyIndexesFromDatalayer($enhancedEcommerceCheckoutTransfer->toArray(true, true));
+        return $enhancedEcommerceTransfer;
     }
 
     /**
      * @param \Generated\Shared\Transfer\OrderTransfer $orderTransfer
      *
-     * @return \Generated\Shared\Transfer\ItemTransfer[]
+     * @return array<\Generated\Shared\Transfer\ItemTransfer>
      */
     protected function mergeMultipleProducts(OrderTransfer $orderTransfer): array
     {
-        /** @var \Generated\Shared\Transfer\ItemTransfer[] $products */
+        /** @var array<\Generated\Shared\Transfer\ItemTransfer> $products */
         $products = [];
 
         foreach ($orderTransfer->getItems() as $itemTransfer) {
@@ -120,7 +146,7 @@ class PurchaseExpander extends BillingAddressExpander implements EnhancedEcommer
     /**
      * @param \Generated\Shared\Transfer\OrderTransfer $orderTransfer
      *
-     * @return array
+     * @return array<string>
      */
     protected function getDiscountCodesFromOrder(OrderTransfer $orderTransfer): array
     {
@@ -140,15 +166,17 @@ class PurchaseExpander extends BillingAddressExpander implements EnhancedEcommer
      */
     protected function getShippingTotal(OrderTransfer $orderTransfer): float
     {
-        if ($orderTransfer->getTotals() === null) {
-            return 0;
+        $shippingTotal = 0;
+
+        foreach ($orderTransfer->getExpenses() as $expens) {
+            if ($expens->getType() !== EnhancedEcommerceCheckoutConnectorConfig::SHIPMENT_EXPENSE_TYPE) {
+                continue;
+            }
+
+            $shippingTotal += $expens->getSumGrossPrice();
         }
 
-        if ($orderTransfer->getTotals()->getShipmentTotal() === null) {
-            return 0;
-        }
-
-        return $this->integerToDecimalConverter->convert($orderTransfer->getTotals()->getShipmentTotal());
+        return $this->integerToDecimalConverter->convert($shippingTotal);
     }
 
     /**

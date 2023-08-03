@@ -10,7 +10,7 @@ use Twig\Environment;
 /**
  * @method \FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\EnhancedEcommerceCheckoutConnectorFactory getFactory()
  */
-class PaymentSelectionRendererPlugin extends AbstractPlugin implements EnhancedEcommerceRenderePluginInterface
+class PaymentRendererPlugin extends AbstractPlugin implements EnhancedEcommerceRenderePluginInterface
 {
     /**
      * @param string $pageType
@@ -33,7 +33,7 @@ class PaymentSelectionRendererPlugin extends AbstractPlugin implements EnhancedE
     public function render(Environment $twig, string $page, array $twigVariableBag): string
     {
         return $this->getFactory()
-            ->createPaymentSelectionRenderer()
+            ->createPaymentRenderer()
             ->render($twig, $page, $twigVariableBag);
     }
 }

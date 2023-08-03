@@ -10,7 +10,7 @@ use Twig\Environment;
 /**
  * @method \FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\EnhancedEcommerceCheckoutConnectorFactory getFactory()
  */
-class PaymentSelectionRendererPlugin extends AbstractPlugin implements EnhancedEcommerceRenderePluginInterface
+class BillingAddressRendererPlugin extends AbstractPlugin implements EnhancedEcommerceRenderePluginInterface
 {
     /**
      * @param string $pageType
@@ -20,7 +20,7 @@ class PaymentSelectionRendererPlugin extends AbstractPlugin implements EnhancedE
      */
     public function isApplicable(string $pageType, array $twigVariableBag = []): bool
     {
-        return $pageType === ModuleConstants::PAGE_TYPE_PAYMENT_SELECTION;
+        return $pageType === ModuleConstants::PAGE_TYPE_BILLING_ADDRESS;
     }
 
     /**
@@ -33,7 +33,7 @@ class PaymentSelectionRendererPlugin extends AbstractPlugin implements EnhancedE
     public function render(Environment $twig, string $page, array $twigVariableBag): string
     {
         return $this->getFactory()
-            ->createPaymentSelectionRenderer()
+            ->createBillingAddressRenderer()
             ->render($twig, $page, $twigVariableBag);
     }
 }

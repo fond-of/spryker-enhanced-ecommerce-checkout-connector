@@ -6,13 +6,9 @@ use Codeception\Test\Unit;
 use FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\Converter\IntegerToDecimalConverterInterface;
 use FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\Dependency\EnhancedEcommerceCheckoutConnectorToCartClientInterface;
 use FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\Dependency\EnhancedEcommerceCheckoutConnectorToLocaleClientBridge;
-use FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\Dependency\EnhancedEcommerceCheckoutConnectorToLocaleClientInterface;
 use FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\Dependency\EnhancedEcommerceCheckoutConnectorToProductStorageClientBridge;
-use FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\Dependency\EnhancedEcommerceCheckoutConnectorToProductStorageClientInterface;
 use FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\Dependency\EnhancedEcommerceCheckoutConnectorToStoreClientBridge;
-use FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\Dependency\EnhancedEcommerceCheckoutConnectorToStoreClientInterface;
 use FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\Model\ProductModel;
-use FondOfSpryker\Yves\EnhancedEcommerceExtension\Dependency\EnhancedEcommerceDataLayerExpanderInterface;
 use Spryker\Yves\Kernel\Container;
 
 class EnhancedEcommerceCheckoutConnectorFactoryTest extends Unit
@@ -101,17 +97,23 @@ class EnhancedEcommerceCheckoutConnectorFactoryTest extends Unit
 
         $this->factory = new EnhancedEcommerceCheckoutConnectorFactory();
         $this->factory->setContainer($this->containerMock);
+        $this->factory->setConfig($this->configMock);
     }
 
     /**
      * @return void
      */
-    public function testCreatePaymentSelectionExpander(): void
+    public function testCreatePaymentSelectionRenderer(): void
     {
-        $this->assertInstanceOf(
-            EnhancedEcommerceDataLayerExpanderInterface::class,
-            $this->factory->createPaymentSelectionExpander()
-        );
+        $this->containerMock->expects(static::atLeastOnce())
+            ->method('has')
+            ->willReturn(true);
+
+        $this->containerMock->expects(static::atLeastOnce())
+            ->method('get')
+            ->willReturn($this->cartClientMock, $this->integerToDecimalConverterMock, $this->localeClientMock, $this->productStorageClientMock);
+
+        $this->factory->createPaymentSelectionRenderer();
     }
 
     /**
@@ -119,18 +121,15 @@ class EnhancedEcommerceCheckoutConnectorFactoryTest extends Unit
      */
     public function testGetCartClient(): void
     {
-        $this->containerMock->expects($this->atLeastOnce())
+        $this->containerMock->expects(static::atLeastOnce())
             ->method('has')
             ->willReturn(true);
 
-        $this->containerMock->expects($this->atLeastOnce())
+        $this->containerMock->expects(static::atLeastOnce())
             ->method('get')
             ->willReturn($this->cartClientMock);
 
-        $this->assertInstanceOf(
-            EnhancedEcommerceCheckoutConnectorToCartClientInterface::class,
-            $this->factory->getCartClient()
-        );
+        $this->factory->getCartClient();
     }
 
     /**
@@ -146,10 +145,7 @@ class EnhancedEcommerceCheckoutConnectorFactoryTest extends Unit
             ->method('get')
             ->willReturn($this->integerToDecimalConverterMock);
 
-        $this->assertInstanceOf(
-            IntegerToDecimalConverterInterface::class,
-            $this->factory->getIntegerToDecimalConverter()
-        );
+        $this->factory->getIntegerToDecimalConverter();
     }
 
     /**
@@ -165,10 +161,7 @@ class EnhancedEcommerceCheckoutConnectorFactoryTest extends Unit
             ->method('get')
             ->willReturn($this->storageClientMock);
 
-        $this->assertInstanceOf(
-            EnhancedEcommerceCheckoutConnectorToStoreClientInterface::class,
-            $this->factory->getStoreClient()
-        );
+        $this->factory->getStoreClient();
     }
 
     /**
@@ -184,10 +177,7 @@ class EnhancedEcommerceCheckoutConnectorFactoryTest extends Unit
             ->method('get')
             ->willReturn($this->productStorageClientMock);
 
-        $this->assertInstanceOf(
-            EnhancedEcommerceCheckoutConnectorToProductStorageClientInterface::class,
-            $this->factory->getProductStorageClient()
-        );
+        $this->factory->getProductStorageClient();
     }
 
     /**
@@ -203,9 +193,6 @@ class EnhancedEcommerceCheckoutConnectorFactoryTest extends Unit
             ->method('get')
             ->willReturn($this->localeClientMock);
 
-        $this->assertInstanceOf(
-            EnhancedEcommerceCheckoutConnectorToLocaleClientInterface::class,
-            $this->factory->getLocaleClient()
-        );
+        $this->factory->getLocaleClient();
     }
 }

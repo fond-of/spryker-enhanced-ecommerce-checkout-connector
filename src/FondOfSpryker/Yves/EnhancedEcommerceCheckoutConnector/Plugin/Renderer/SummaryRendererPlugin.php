@@ -2,7 +2,7 @@
 
 namespace FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\Plugin\Renderer;
 
-use FondOfSpryker\Shared\EnhancedEcommerceCheckoutConnector\EnhancedEcommerceCheckoutConnectorConstants as ModuleConstants;
+use FondOfSpryker\Shared\EnhancedEcommerceCheckoutConnector\EnhancedEcommerceCheckoutConnectorConstants;
 use FondOfSpryker\Yves\EnhancedEcommerceExtension\Dependency\EnhancedEcommerceRenderePluginInterface;
 use Spryker\Yves\Kernel\AbstractPlugin;
 use Twig\Environment;
@@ -10,7 +10,7 @@ use Twig\Environment;
 /**
  * @method \FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\EnhancedEcommerceCheckoutConnectorFactory getFactory()
  */
-class PaymentSelectionRendererPlugin extends AbstractPlugin implements EnhancedEcommerceRenderePluginInterface
+class SummaryRendererPlugin extends AbstractPlugin implements EnhancedEcommerceRenderePluginInterface
 {
     /**
      * @param string $pageType
@@ -20,7 +20,7 @@ class PaymentSelectionRendererPlugin extends AbstractPlugin implements EnhancedE
      */
     public function isApplicable(string $pageType, array $twigVariableBag = []): bool
     {
-        return $pageType === ModuleConstants::PAGE_TYPE_PAYMENT_SELECTION;
+        return $pageType === EnhancedEcommerceCheckoutConnectorConstants::PAGE_TYPE_SUMMARY;
     }
 
     /**
@@ -33,7 +33,7 @@ class PaymentSelectionRendererPlugin extends AbstractPlugin implements EnhancedE
     public function render(Environment $twig, string $page, array $twigVariableBag): string
     {
         return $this->getFactory()
-            ->createPaymentSelectionRenderer()
+            ->createSummaryRenderer()
             ->render($twig, $page, $twigVariableBag);
     }
 }

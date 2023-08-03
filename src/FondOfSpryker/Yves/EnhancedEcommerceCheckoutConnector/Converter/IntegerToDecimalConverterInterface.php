@@ -9,5 +9,5 @@ interface IntegerToDecimalConverterInterface
      *
      * @return float
      */
-    public function convert($value): float;
+    public function convert(int $value): float;
 }

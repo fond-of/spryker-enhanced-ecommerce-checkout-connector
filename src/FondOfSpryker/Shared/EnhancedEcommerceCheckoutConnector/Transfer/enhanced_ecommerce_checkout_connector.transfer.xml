@@ -8,12 +8,12 @@
         <property name="eventCategory" type="string"/>
         <property name="eventAction" type="string"/>
         <property name="eventLabel" type="string"/>
+        <property name="eventProducts" singular="eventProduct" type="EnhancedEcommerceProduct[]"/>
         <property name="ecommerce" type="array"/>
     </transfer>
 
     <transfer name="EnhancedEcommerceCheckout">
         <property name="actionField" type="array"/>
-        <property name="products" singular="product" type="EnhancedEcommerceProduct[]"/>
     </transfer>
 
     <transfer name="EnhancedEcommerceProduct">
@@ -45,6 +45,12 @@
         <property name="store" type="string"/>
         <property name="totals" type="Totals"/>
         <property name="calculatedDiscounts" singular="calculatedDiscount" type="CalculatedDiscount[]"/>
+        <property name="expenses" singular="expense" type="Expense[]"/>
+    </transfer>
+
+    <transfer name="Expense">
+        <property name="type" type="string"/>
+        <property name="sumGrossPrice" type="int"/>
     </transfer>
 
     <transfer name="Totals">

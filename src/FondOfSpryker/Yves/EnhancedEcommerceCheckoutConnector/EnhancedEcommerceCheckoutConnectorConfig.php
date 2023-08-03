@@ -8,7 +8,12 @@ use Spryker\Yves\Kernel\AbstractBundleConfig;
 class EnhancedEcommerceCheckoutConnectorConfig extends AbstractBundleConfig
 {
     /**
-     * @return array
+     * @var string
+     */
+    public const SHIPMENT_EXPENSE_TYPE = 'SHIPMENT_EXPENSE_TYPE';
+
+    /**
+     * @return array<string, string>
      */
     public function getPaymentMethodMapping(): array
     {
@@ -20,7 +25,7 @@ class EnhancedEcommerceCheckoutConnectorConfig extends AbstractBundleConfig
     }
 
     /**
-     * @return array
+     * @return array<string>
      */
     public function getValidCheckoutDatalayerIndex(): array
     {
