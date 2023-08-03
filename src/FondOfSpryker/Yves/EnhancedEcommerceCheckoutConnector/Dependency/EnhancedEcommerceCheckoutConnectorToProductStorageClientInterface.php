@@ -15,7 +15,7 @@ interface EnhancedEcommerceCheckoutConnectorToProductStorageClientInterface
      * @param int $idProductAbstract
      * @param string $localeName
      *
-     * @return array|null
+     * @return array<\Generated\Shared\Transfer\ProductAbstractStorageTransfer>|null
      */
     public function findProductAbstractStorageData(int $idProductAbstract, string $localeName): ?array;
 }

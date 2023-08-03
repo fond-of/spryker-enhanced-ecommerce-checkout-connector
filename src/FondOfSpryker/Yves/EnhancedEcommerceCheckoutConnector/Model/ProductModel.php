@@ -11,6 +11,9 @@ use Generated\Shared\Transfer\ItemTransfer;
 
 class ProductModel implements ProductModelInterface
 {
+    /**
+     * @var string
+     */
     public const UNTRANSLATED_KEY = '_';
 
     /**
@@ -76,10 +79,10 @@ class ProductModel implements ProductModelInterface
      */
     protected function addLocalizedAbstractAttributesToItemTransfer(ItemTransfer $itemTransfer): ItemTransfer
     {
-        if (!$itemTransfer->getAbstractAttributes() || count($itemTransfer->getAbstractAttributes()) === 0) {
+        if (count($itemTransfer->getAbstractAttributes()) === 0) {
             $productData = $this->productStorageClient->findProductAbstractStorageData(
                 $itemTransfer->getIdProductAbstract(),
-                $this->localeClient->getCurrentLocale()
+                $this->localeClient->getCurrentLocale(),
             );
 
             if (isset($productData[ModuleConstants::PARAM_PRODUCT_ATTRIBUTES])) {
@@ -199,7 +202,7 @@ class ProductModel implements ProductModelInterface
     /**
      * @param \Generated\Shared\Transfer\ItemTransfer $itemTransfer
      *
-     * @return array
+     * @return array<string>
      */
     protected function getDiscountCodes(ItemTransfer $itemTransfer): array
     {

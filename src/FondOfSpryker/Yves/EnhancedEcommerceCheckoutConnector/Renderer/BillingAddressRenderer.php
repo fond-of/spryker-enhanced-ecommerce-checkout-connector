@@ -43,7 +43,7 @@ class BillingAddressRenderer implements EnhancedEcommerceRendererInterface
     /**
      * @param \Twig\Environment $twig
      * @param string $page
-     * @param array $twigVariableBag
+     * @param array<string, mixed> $twigVariableBag
      *
      * @return string
      */
@@ -65,7 +65,7 @@ class BillingAddressRenderer implements EnhancedEcommerceRendererInterface
     }
 
     /**
-     * @return \Generated\Shared\Transfer\EnhancedEcommerceProductTransfer[]
+     * @return array<\Generated\Shared\Transfer\EnhancedEcommerceProductTransfer>
      */
     protected function getProducts(): array
     {

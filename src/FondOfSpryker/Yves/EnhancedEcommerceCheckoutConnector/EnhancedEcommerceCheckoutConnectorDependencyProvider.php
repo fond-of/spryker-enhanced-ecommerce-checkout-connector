@@ -13,10 +13,29 @@ use Spryker\Yves\Kernel\Container;
 
 class EnhancedEcommerceCheckoutConnectorDependencyProvider extends AbstractBundleDependencyProvider
 {
+    /**
+     * @var string
+     */
     public const CART_CLIENT = 'CART_CLIENT';
+
+    /**
+     * @var string
+     */
     public const STORE_CLIENT = 'STORE_CLIENT';
+
+    /**
+     * @var string
+     */
     public const LOCALE_CLIENT = 'LOCALE_CLIENT';
+
+    /**
+     * @var string
+     */
     public const PRODUCT_STORAGE_CLIENT = 'PRODUCT_STORAGE_CLIENT';
+
+    /**
+     * @var string
+     */
     public const CONVERTER_INTERGER_TO_DECIMAL = 'CONVERTER_INTERGER_TO_DECIMAL';
 
     /**
@@ -44,7 +63,7 @@ class EnhancedEcommerceCheckoutConnectorDependencyProvider extends AbstractBundl
     {
         $container->set(static::CART_CLIENT, static function (Container $container) {
             return new EnhancedEcommerceCheckoutConnectorToCartClientBridge(
-                $container->getLocator()->cart()->client()
+                $container->getLocator()->cart()->client(),
             );
         });
 
@@ -84,7 +103,7 @@ class EnhancedEcommerceCheckoutConnectorDependencyProvider extends AbstractBundl
     {
         $container->set(static::STORE_CLIENT, static function (Container $container) {
             return new EnhancedEcommerceCheckoutConnectorToStoreClientBridge(
-                $container->getLocator()->store()->client()
+                $container->getLocator()->store()->client(),
             );
         });
 
@@ -100,7 +119,7 @@ class EnhancedEcommerceCheckoutConnectorDependencyProvider extends AbstractBundl
     {
         $container->set(static::PRODUCT_STORAGE_CLIENT, static function (Container $container) {
             return new EnhancedEcommerceCheckoutConnectorToProductStorageClientBridge(
-                $container->getLocator()->productStorage()->client()
+                $container->getLocator()->productStorage()->client(),
             );
         });
 
@@ -116,7 +135,7 @@ class EnhancedEcommerceCheckoutConnectorDependencyProvider extends AbstractBundl
     {
         $container->set(static::LOCALE_CLIENT, static function (Container $container) {
             return new EnhancedEcommerceCheckoutConnectorToLocaleClientBridge(
-                $container->getLocator()->locale()->client()
+                $container->getLocator()->locale()->client(),
             );
         });
 

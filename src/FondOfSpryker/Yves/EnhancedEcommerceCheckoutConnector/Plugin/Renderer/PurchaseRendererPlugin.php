@@ -15,7 +15,7 @@ class PurchaseRendererPlugin extends AbstractPlugin implements EnhancedEcommerce
 {
     /**
      * @param string $pageType
-     * @param array $twigVariableBag
+     * @param array<string, mixed> $twigVariableBag
      *
      * @return bool
      */
@@ -39,7 +39,7 @@ class PurchaseRendererPlugin extends AbstractPlugin implements EnhancedEcommerce
     /**
      * @param \Twig\Environment $twig
      * @param string $page
-     * @param array $twigVariableBag
+     * @param array<string, mixed> $twigVariableBag
      *
      * @return string
      */

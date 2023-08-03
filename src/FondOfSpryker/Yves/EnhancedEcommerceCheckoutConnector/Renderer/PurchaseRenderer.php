@@ -5,6 +5,7 @@ namespace FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\Renderer;
 use FondOfSpryker\Shared\EnhancedEcommerceCheckoutConnector\EnhancedEcommerceCheckoutConnectorConstants as ModuleConstants;
 use FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\Converter\IntegerToDecimalConverterInterface;
 use FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\Dependency\EnhancedEcommerceCheckoutConnectorToStoreClientInterface;
+use FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\EnhancedEcommerceCheckoutConnectorConfig;
 use FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\Model\ProductModelInterface;
 use FondOfSpryker\Yves\EnhancedEcommerceExtension\Dependency\EnhancedEcommerceRendererInterface;
 use Generated\Shared\Transfer\EnhancedEcommerceCheckoutTransfer;
@@ -47,7 +48,7 @@ class PurchaseRenderer implements EnhancedEcommerceRendererInterface
     /**
      * @param \Twig\Environment $twig
      * @param string $page
-     * @param array $twigVariableBag
+     * @param array<string, mixed> $twigVariableBag
      *
      * @return string
      */
@@ -79,7 +80,7 @@ class PurchaseRenderer implements EnhancedEcommerceRendererInterface
     }
 
     /**
-     * @param array $twigVariableBag
+     * @param array<string, mixed> $twigVariableBag
      *
      * @return \Generated\Shared\Transfer\EnhancedEcommerceCheckoutTransfer
      */
@@ -101,7 +102,7 @@ class PurchaseRenderer implements EnhancedEcommerceRendererInterface
 
     /**
      * @param \Generated\Shared\Transfer\EnhancedEcommerceTransfer $enhancedEcommerceTransfer
-     * @param array $twigVariableBag
+     * @param array<string, mixed> $twigVariableBag
      *
      * @return \Generated\Shared\Transfer\EnhancedEcommerceTransfer
      */
@@ -114,7 +115,7 @@ class PurchaseRenderer implements EnhancedEcommerceRendererInterface
 
         foreach ($this->mergeMultipleProducts($orderTransfer) as $itemTransfer) {
             $enhancedEcommerceTransfer->addProduct(
-                $this->productModel->createFromItemTransfer($itemTransfer)
+                $this->productModel->createFromItemTransfer($itemTransfer),
             );
         }
 
@@ -124,11 +125,11 @@ class PurchaseRenderer implements EnhancedEcommerceRendererInterface
     /**
      * @param \Generated\Shared\Transfer\OrderTransfer $orderTransfer
      *
-     * @return \Generated\Shared\Transfer\ItemTransfer[]
+     * @return array<\Generated\Shared\Transfer\ItemTransfer>
      */
     protected function mergeMultipleProducts(OrderTransfer $orderTransfer): array
     {
-        /** @var \Generated\Shared\Transfer\ItemTransfer[] $products */
+        /** @var array<\Generated\Shared\Transfer\ItemTransfer> $products */
         $products = [];
 
         foreach ($orderTransfer->getItems() as $itemTransfer) {
@@ -145,7 +146,7 @@ class PurchaseRenderer implements EnhancedEcommerceRendererInterface
     /**
      * @param \Generated\Shared\Transfer\OrderTransfer $orderTransfer
      *
-     * @return array
+     * @return array<string>
      */
     protected function getDiscountCodesFromOrder(OrderTransfer $orderTransfer): array
     {
@@ -165,15 +166,17 @@ class PurchaseRenderer implements EnhancedEcommerceRendererInterface
      */
     protected function getShippingTotal(OrderTransfer $orderTransfer): float
     {
-        if ($orderTransfer->getTotals() === null) {
-            return 0;
+        $shippingTotal = 0;
+
+        foreach ($orderTransfer->getExpenses() as $expens) {
+            if ($expens->getType() !== EnhancedEcommerceCheckoutConnectorConfig::SHIPMENT_EXPENSE_TYPE) {
+                continue;
+            }
+
+            $shippingTotal += $expens->getSumGrossPrice();
         }
 
-        if ($orderTransfer->getTotals()->getShipmentTotal() === null) {
-            return 0;
-        }
-
-        return $this->integerToDecimalConverter->convert($orderTransfer->getTotals()->getShipmentTotal());
+        return $this->integerToDecimalConverter->convert($shippingTotal);
     }
 
     /**

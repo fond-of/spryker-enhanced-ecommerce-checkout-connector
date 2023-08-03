@@ -45,6 +45,12 @@
         <property name="store" type="string"/>
         <property name="totals" type="Totals"/>
         <property name="calculatedDiscounts" singular="calculatedDiscount" type="CalculatedDiscount[]"/>
+        <property name="expenses" singular="expense" type="Expense[]"/>
+    </transfer>
+
+    <transfer name="Expense">
+        <property name="type" type="string"/>
+        <property name="sumGrossPrice" type="int"/>
     </transfer>
 
     <transfer name="Totals">

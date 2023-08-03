@@ -79,7 +79,7 @@ class PaymentSelectionRendererTest extends Unit
         $this->renderer = new PaymentSelectionRenderer(
             $this->cartClientMock,
             $this->productModelMock,
-            $this->configMock
+            $this->configMock,
         );
     }
 

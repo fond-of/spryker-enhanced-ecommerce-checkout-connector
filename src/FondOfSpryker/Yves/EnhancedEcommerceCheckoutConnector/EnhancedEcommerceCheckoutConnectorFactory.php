@@ -38,7 +38,7 @@ class EnhancedEcommerceCheckoutConnectorFactory extends AbstractFactory
         return new PurchaseRenderer(
             $this->createProductModel(),
             $this->getStoreClient(),
-            $this->getIntegerToDecimalConverter()
+            $this->getIntegerToDecimalConverter(),
         );
     }
 
@@ -58,7 +58,7 @@ class EnhancedEcommerceCheckoutConnectorFactory extends AbstractFactory
         return new ProductModel(
             $this->getIntegerToDecimalConverter(),
             $this->getLocaleClient(),
-            $this->getProductStorageClient()
+            $this->getProductStorageClient(),
         );
     }
 
@@ -70,7 +70,7 @@ class EnhancedEcommerceCheckoutConnectorFactory extends AbstractFactory
         return new PaymentSelectionRenderer(
             $this->getCartClient(),
             $this->createProductModel(),
-            $this->getConfig()
+            $this->getConfig(),
         );
     }
 

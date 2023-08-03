@@ -46,7 +46,7 @@ class PaymentSelectionRenderer implements EnhancedEcommerceRendererInterface
     /**
      * @param \Twig\Environment $twig
      * @param string $page
-     * @param array $twigVariableBag
+     * @param array<string, mixed> $twigVariableBag
      *
      * @return string
      */
@@ -69,7 +69,7 @@ class PaymentSelectionRenderer implements EnhancedEcommerceRendererInterface
     }
 
     /**
-     * @param array $twigVariableBag
+     * @param array<string, mixed> $twigVariableBag
      *
      * @return \Generated\Shared\Transfer\EnhancedEcommerceTransfer
      */

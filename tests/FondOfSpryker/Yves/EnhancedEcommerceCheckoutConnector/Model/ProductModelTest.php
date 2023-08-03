@@ -37,7 +37,7 @@ class ProductModelTest extends Unit
     protected $calculatedDiscountTransferMock;
 
     /**
-     * @var ProductModelInterface
+     * @var \FondOfSpryker\Yves\EnhancedEcommerceCheckoutConnector\Model\ProductModelInterface
      */
     protected $model;
 
@@ -69,7 +69,7 @@ class ProductModelTest extends Unit
         $this->model = new ProductModel(
             $this->integerToDecimalConverter,
             $this->localeClientMock,
-            $this->productStorageClientMock
+            $this->productStorageClientMock,
         );
     }
 

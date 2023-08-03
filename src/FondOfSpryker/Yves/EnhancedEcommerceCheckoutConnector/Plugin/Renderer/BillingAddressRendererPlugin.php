@@ -14,7 +14,7 @@ class BillingAddressRendererPlugin extends AbstractPlugin implements EnhancedEco
 {
     /**
      * @param string $pageType
-     * @param array $twigVariableBag
+     * @param array<string, mixed> $twigVariableBag
      *
      * @return bool
      */
@@ -26,7 +26,7 @@ class BillingAddressRendererPlugin extends AbstractPlugin implements EnhancedEco
     /**
      * @param \Twig\Environment $twig
      * @param string $page
-     * @param array $twigVariableBag
+     * @param array<string, mixed> $twigVariableBag
      *
      * @return string
      */
